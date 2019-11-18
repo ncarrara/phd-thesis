@@ -1,0 +1,95 @@
+\documentclass[french]{beamer}
+\usetheme[secheader]{Boadilla}
+\usecolortheme[named=orange]{structure}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usefonttheme{serif}
+
+\title[TITLE]{TITLE}
+\subtitle{SUB TITLE}
+\author{AUTHOR}
+\institute[SCHOOL]{SCHOOL COLLEGE UNIVERSITY}
+\date{\today}
+
+\setbeamertemplate{footline}{%
+\hfill%
+\usebeamercolor[fg]{page number in head/foot}%
+\usebeamerfont{page number in head/foot}%
+\insertframenumber%
+%\,/\,\inserttotalframenumber
+\kern1em\vskip2pt%
+}
+
+\beamertemplatenavigationsymbolsempty
+
+\begin{document}
+
+    \begin{frame}
+        \maketitle
+        \centering
+    \end{frame}
+
+    \section{Introduction}
+    \begin{frame}
+        \begin{block}{Block}
+            Standard beamer block
+        \end{block}
+        \begin{alertblock}{Block}
+            Alert block
+        \end{alertblock}
+        \begin{exampleblock}{Block}
+            Example block
+        \end{exampleblock}
+    \end{frame}
+
+    \begin{frame}
+    \end{frame}
+    \section{Systèmes de dialogue orientées tâches}
+    \begin{frame}
+    \end{frame}
+    \section{Passage à l'échelle de l'apprentissage par transfert}
+    \begin{frame}
+    \end{frame}
+    \section{Apprentissage par transfert sécurisé}
+
+    \begin{frame}
+        Le plus important dans un nouveau systèmes, c'est de garder l'user. Alors, au lieu d'optimiser, pourquoi ne pas focus sur le fait de pas le faire fuir ?
+    \end{frame}
+
+    \subsection{epsilon safe}
+    \begin{frame}
+
+        explore
+        exploite
+        pi safe
+            rajoute une info supplementaire (safery) lié intimement à la reussite, et peut donc guider l'apprentissage
+            eviter les endroits trop unsafe pour garder l'user
+    \end{frame}
+
+    \begin{frame}
+        Les results sont pas probants.
+        Pourquoi ?
+            l'environement est trop simple
+            cette information n'est pas exploiter comme il faut
+                single reward suffer from TOO safe TOO unsafe
+                    peut etre quand dans ce cas c'était trop unsafe
+                    comment construit des politiques safe sans end up with extreme behavious ? -> BFTQ
+    \end{frame}
+
+    \subsection{Créer avec un agent précautionneux, mais pas trop.}
+
+    \begin{frame}
+
+        BFTQ
+
+    \end{frame}
+
+    \section{Conclusion}
+    \begin{frame}
+    \end{frame}
+
+
+\end{document}
+
