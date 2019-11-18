@@ -1,0 +1,28 @@
+\begin{algorithm}[tp]
+\DontPrintSemicolon
+\KwData{$\cD$, $\tilde{\budgetspace}$ a finite subset of $\budgetspace$, $\discountfactor$, a \idx{model} $\oQ\in (\Real^2)^{\ocS \times \ocA}$, a \idx{regression} algorithm \texttt{fit}, a set of \gls{CPU} workers $W$}
+\KwResult{$\oQ^*$}
+$\oQ \leftarrow 0$\;
+$\overline{X} \leftarrow \{\os_{\indextransition},\oa_{\indextransition})\}_{{\indextransition}\in[0, |\cD|]}$\;
+$\overline{S}' \leftarrow \{\os_{\indextransition}'\}_{{\indextransition}\in[0, |\cD|]}$\;
+\Repeat{convergence}{
+   Evaluate $\oQ(\overline{S}', \cA \times \tilde{\budgetspace})$ in a single forward pass\;
+   Split $\cD$ among workers: $\cD = \cup_{w\in W} \cD_w$\;
+   \For(\tcp*[f]{Run in parallel}){$w\in W$}{
+       \For{$(\os_{\indextransition}=(\boldsymbol{\cdot},\budget_{\indextransition}),\oa_{\indextransition}=(\boldsymbol{\cdot},\budget_{a_{\indextransition}}),\overline{r}_{\indextransition} = ({r}_{\indextransition},{c}_{\indextransition}),\os_{\indextransition}'=(s'_{\indextransition},\boldsymbol{\cdot}) \in \cD$} {
+           $\cP \leftarrow \{(\Qc(\os_i',\cA \times \tilde{\budgetspace}), \Qr(\os_i',\cA \times \tilde{\budgetspace}))\}$\;
+           $\cP.\texttt{prune}()$ \tcp*[f]{Remove all dominated points}\;
+           $\cH \leftarrow \texttt{convex\_hull}(\cP).\text{vertices}()$\tcp*[f]{in cw order}\;
+           $k \leftarrow \min\{k: \budget_{\indextransition} \geq q_c$ with $\left(q_c,q_r\right) = \cH[k]\}$\;
+           $q_c^2,q_r^2,q_c^1,q_r^1 \leftarrow \cH[k],\cH[k-1]$\;
+           $p \leftarrow (\budget_{a_{\indextransition}} - q_a^1) / (q_c^2 - q_c^1)$\;
+           $Y_c^{w,{\indextransition}} \leftarrow {c}_{\indextransition} + \discountfactor ((1-p) q_c^1+ p q_c^2)$\;
+           $Y_r^{w,{\indextransition}} \leftarrow {r}_{\indextransition} + \discountfactor ((1-p) q_r^1+ p q_r^2)$\;
+       }
+   }
+   Join the results: $\overline{Y} \leftarrow \cup_{w\in W} (Y_c^w, Y_r^w)$\;
+   $\oQ \leftarrow \texttt{fit}(\overline{X}, \overline{Y})$\;
+}
+\caption{Scalable Budgeted Fitted-$Q$}
+\label{algo:bftq_full}
+\end{algorithm}

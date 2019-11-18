@@ -1,0 +1,24 @@
+\begin{algorithm}[ht!]
+\DontPrintSemicolon
+\KwData{An \idx{environment}, a \gls{BFTQ} solver, $W$ \gls{CPU} workers}
+\KwResult{A \idx{batch} of \idx{transition}s $\cD$}
+$\cD\leftarrow\{\}$\;
+\For{each intermediate \idx{batch}} {
+split trajectories\index{trajectory} between $W$ workers\;
+\For(\tcp*[f]{run this loop on each worker in parallel}){each trajectory\index{trajectory} in \idx{batch}}{
+sample initial budget $\budget\sim\cU(\binomial(1,B)$.\;
+\While{trajectory\index{trajectory} not done}{
+update $\egreedy$ from schedule.\;
+sample $z\sim\cU([0, 1])$.\;
+\lIf{$z < \egreedy$}{sample $(a, \budgetaction)\sim\cU(\Delta_{\cA\times\budgetspace})$.\tcp*[f]{Explore}}
+\lElse{sample $(a, \budgetaction)\sim\budgetedpolicy_\text{greedy}(a, \budgetaction|s, \budget; \oQ^*)$.\tcp*[f]{Exploit}}
+append \idx{transition} $(\os=(s, \budget),\oa=(a, \budgetaction),\overline{r}=(r, c),\os'=(s',\budgetaction))$ to \idx{batch} $\cD$.\;
+step trajectory\index{trajectory} budget $\budget \leftarrow \budgetaction$
+}
+}
+$\budgetedpolicy_\text{greedy}(\cdot\sim; ~\oQ^*) \leftarrow\texttt{BFTQ}(\cD)$.
+}
+\Return{the \idx{batch} of \idx{transition}s $\cD$}
+\caption{Risk-sensitive exploration}
+\label{algo:risk-sensitive-exploration}
+\end{algorithm}

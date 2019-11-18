@@ -1,0 +1,40 @@
+\documentclass[12pt,fleqn]{book} % Default font size and left-justified equations
+
+\input{structure.tex}
+\input{mathdef.tex}
+\input{glossary.tex}
+\input{index.tex}
+\input{symbol.tex}
+
+\hypersetup{pdftitle={Thèse de Doctorat, Nicolas Carrara},pdfauthor={Nicolas Carrara}}
+
+%\DeclareUnicodeCharacter{030C}{********************************************************************}
+
+\begin{document}
+    \input{header.tex}
+
+    \input{sources/introduction/main.tex}
+
+    \part{Task-oriented Dialogue Systems}
+    \label{part:task-oriented-dialogue-systems}
+    \input{sources/pipeline/main}
+    \input{sources/dm-rl/main}
+    \input{sources/dm-tl/main}
+
+    \part{Scaling up Transfer Learning}
+    \label{part:contributions-scaling}
+    \input{sources/contribution/sigdial/main}
+    \input{sources/contribution/tdqn/main}
+
+    \part{Safe Transfer Learning}
+    \label{part:contributions-safe}
+    \input{sources/contribution/nips/main}
+    \input{sources/contribution/slsp/main}
+
+    \part{Closing}
+    \label{part:closing}
+    \input{sources/conclusion/main}
+    \input{sources/appendix/main}
+
+    \input{footer.tex}
+\end{document}

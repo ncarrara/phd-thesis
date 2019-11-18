@@ -1,0 +1,223 @@
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\makeatletter
+\def\parsecomma#1,#2\endparsecomma{\def\page@x{#1}\def\page@y{#2}}
+\tikzdeclarecoordinatesystem{page}{
+\parsecomma#1\endparsecomma
+\pgfpointanchor{current page}{north east}
+% Save the upper right corner
+\pgf@xc=\pgf@x%
+\pgf@yc=\pgf@y%
+% save the lower left corner
+\pgfpointanchor{current page}{south west}
+\pgf@xb=\pgf@x%
+\pgf@yb=\pgf@y%
+% Transform to the correct placement
+\pgfmathparse{(\pgf@xc-\pgf@xb)/2.*\page@x+(\pgf@xc+\pgf@xb)/2.}
+\expandafter\pgf@x\expandafter=\pgfmathresult pt
+\pgfmathparse{(\pgf@yc-\pgf@yb)/2.*\page@y+(\pgf@yc+\pgf@yb)/2.}
+\expandafter\pgf@y\expandafter=\pgfmathresult pt
+}
+\makeatother
+
+\begingroup
+\thispagestyle{empty} % Suppress headers and footers on the title page
+
+\definecolor{top} {HTML}{FFE5BF}
+\definecolor{bot} {HTML}{FFE5BF}
+\definecolor{title-color} {HTML}{FFFFFF}
+
+\begin{tikzpicture}[remember picture,overlay]
+    \node [shading = axis,rectangle, top color=top, bottom color=bot,shading angle=0, anchor=north, minimum width=\paperwidth, minimum height=\paperheight] (box) at (current page.north){};
+%    \node[inner sep=0pt] (background) at (current page.center)
+%    {\includegraphics[width=\paperwidth]{background2.pdf}};
+    \draw (page cs:0.,0.85) node [text opacity=1,inner sep=1cm]
+    {\large\centering\parbox[c][][t]{\paperwidth}
+    {\centering Université des Sciences et des Technologies de Lille\\Ecole Doctorale Sciences Pour L'ingénieur}
+    };
+
+    \draw (page cs:0.,0.6) node [text opacity=1,inner sep=1cm]
+    {\large\centering\parbox[c][][t]{\paperwidth}
+    {\centering \textbf{Thèse de Doctorat}\\\centering Spécialité:  \textbf{Informatique} \\\normalsize Présentée par \large \textbf{Nicolas Carrara}}
+    };
+
+    \draw (page cs:0.,0.35) node [fill=title-color,inner sep=1cm]
+    {\Huge\centering\parbox[c][][t]{\paperwidth}
+    {\centering  {\Large Reinforcement learning for Dialogue Systems optimization with user adaptation}
+    }};
+
+    \draw (page cs:0.,0.1) node [text opacity=1,inner sep=1cm]
+    {\Huge\centering\parbox[c][][t]{\paperwidth}
+    {\centering\normalsize sous la direction du \large \textbf{Pr. Olivier Pietquin}\\\normalsize et l'encadrement du \large \textbf{Dr. Romain Laroche}\\\normalsize ainsi que du \large \textbf{Dr. Tanguy Urvoy}}
+    };
+
+
+    \draw (page cs:0.,-0.15) node [text opacity=1,inner sep=1cm]
+    {\normalsize\centering\parbox[c][][t]{\paperwidth}
+    {\centering Soutenue publiquement à Villeneuve d'Ascq, le XX XX 2019 devant le jury composé de :}
+    };
+
+    \draw (page cs:0.,-0.35) node [text opacity=1,inner sep=1cm]
+    {\normalsize\centering\parbox[c][][t]{\paperwidth}
+    {\centering
+    \begin{tabular}{l l l}
+
+        Pr. Philippe \textbf{Preux} & Université de Lille & Président du jury \\
+        Dr. Alain \textbf{Dutech} & INRIA & Rapporteur \\
+        Pr. Fabrice \textbf{Lefèvre} & Université d'Avignon & Rapporteur \\
+        Dr. Lina Maria \textbf{Rojas-Barahona}  & Orange Labs & Examinatrice \\
+        Pr. Olivier \textbf{Pietquin} & Université de Lille, Google Research & Directeur de thèse \\
+        Dr. Romain \textbf{Laroche} & Microsoft Research & Encadrant industriel \\
+        Dr. Tanguy \textbf{Urvoy}& Orange Labs & Encadrant industriel \\
+    \end{tabular}}
+    };
+
+
+    \draw (page cs:0.,-0.65) node [text opacity=1,inner sep=1cm]
+    {\normalsize\centering\parbox[c][][t]{\paperwidth}
+    {\centering Centre de Recherche en Informatique, Signal et Automatique de Lille (CRIStAL), \\UMR 9189 Équipe SequeL, 59650, Villeneuve d’Ascq, France}
+    };
+
+
+
+    \draw (page cs:0.,-0.8) node[inner sep=0pt]
+%    {\includegraphics[width=0.9\paperwidth]{logos.pdf}};
+    {\includesvg[width=0.9\paperwidth]{img/logos}};
+
+    % Author name
+\end{tikzpicture}
+\vfill
+\endgroup
+
+%{\normalsize Présenté par \large Nicolas Carrara}
+
+%----------------------------------------------------------------------------------------
+%	COPYRIGHT PAGE
+%----------------------------------------------------------------------------------------
+
+%\newpage
+%~\vfill
+%\thispagestyle{empty}
+%
+%\noindent Copyright \copyright\ 2019 John Smith\\ % Copyright notice
+%
+%\noindent \textsc{Published by Publisher}\\ % Publisher
+%
+%\noindent \textsc{book-website.com}\\ % URL
+%
+%\noindent Licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License (the ``License''). You may not use this file except in compliance with the License. You may obtain a copy of the License at \url{http://creativecommons.org/licenses/by-nc/3.0}. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \textsc{``as is'' basis, without warranties or conditions of any kind}, either express or implied. See the License for the specific language governing permissions and limitations under the License.\\ % License information, replace this with your own license (if any)
+%
+%\noindent \textit{First printing, March 2019} % Printing/edition date
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	abstract
+%----------------------------------------------------------------------------------------
+\newpage
+
+\section*{Abstract}
+
+The most powerful artificial intelligence systems are now  based on learned statistical models. In order to build efficient models, these systems must collect a huge amount of data on their environment.
+%, and, in order to achieve optimal efficiency, they needs to collect a substantial amount of data.
+%
+Personal assistants, smart-homes, voice-servers and other dialogue applications are no exceptions to this statement.
+%
+A specificity of those systems is that they are designed to interact with humans, and as a consequence, their training data has to be collected from interactions with these humans. 
+As the number of interactions with a single person is often too scarce to train a proper model, the usual approach to maximise the amount of data consists in mixing data collected with different users into a single corpus.
+
+However, one limitation of this approach is that, by construction, the trained models are only efficient with an "average" human and do not include any sort of adaptation; this lack of adaptation makes the service unusable for some specific group of persons and leads to a restricted customers base and inclusiveness problems.
+%
+This thesis proposes solutions to construct \acrlongpl{DS} that are robust to this problem by combining \acrlong{TL} and \acrlong{RL}. It explores two main ideas:
+
+The first idea of this thesis consists in incorporating adaptation in the very first dialogues with a new user. To that extend, we use the knowledge gathered with previous users. But how to scale such systems with a growing database of user interactions? The first proposed approach involves clustering of \acrlongpl{DS} (tailored for their respective user) based on their behaviours. We demonstrated through handcrafted and real user-models experiments how this method improves the dialogue quality for new and unknown users. The second approach extends the \acrlong{DQN} algorithm with a continuous transfer process. %As we tried different approaches with no result so far, we expose the difficulties and limitations encountered.
+
+The second idea states that before using a dedicated \acrlong{DS}, the first interactions with a user should be handled carefully by a safe \acrlong{DS} common to all users. The underlying approach is divided in two steps. The first step consists in learning a safe strategy through \acrlong{RL}. To that extent, we introduced a budgeted \acrlong{RL} framework for continuous state space and the underlying extensions of classic \acrlong{RL} algorithms. In particular, the safe version of the \acrlong{FTQ} algorithm has been validated, in term of safety and efficiency, on a dialogue system tasks and an autonomous driving problem. The second step consists in using those safe strategies when facing new users; this method is an extension of the classic $\epsilon$-greedy algorithm. %Unfortunatly, improvments on the learning speed haven't been observed so far.
+
+\newpage
+
+\section*{Résumé}
+
+Les systèmes d'intelligence artificielle les plus puissants utilisent désormais des modèles statistiques. Afin de construire des modèles efficaces, ces systèmes doivent collecter une quantité substantielle de données issues de l’environnement. Les assistants personnels, maisons connectées, serveurs vocaux et autres systèmes de dialogue ne font pas exception. Ces systèmes ont pour vocation d'interagir avec des humains, et pour cela, leurs données d'apprentissage se doivent d'être collectées avec ces mêmes humains. Parce que le nombre d'interactions avec une seule personne est assez faible, l'approche usuelle pour augmenter le jeu de données consiste à agréger les données de tous les utilisateurs.
+
+Une des limitations de cette approche vient du fait que, par construction, les modèles entraînés ainsi ne sont efficaces qu'avec un humain "moyen" et n'incluent pas de système d'adaptation ; cette faiblesse entraîne la restriction du service à certains groupes de personnes; Par conséquent, cela réduit l'ensemble des utilisateurs et provoque des problèmes d'inclusion. La présente thèse propose des solutions impliquant la construction de systèmes de dialogue combinant l'apprentissage par transfert et l'apprentissage par renforcement. La thèse explore deux pistes de recherche :
+
+La première consiste à inclure un mécanisme d'adaptation dès les premières interactions avec un nouvel utilisateur. Pour ce faire, nous utilisons la connaissance accumulée avec des utilisateurs déjà connus du système. La question sous-jacente est la suivante : comment gérer l'évolution du système suite à une croissance interrompue d'utilisateurs et donc de connaissance? La première approche implique le clustering des systèmes de dialogue (chacun étant spécialisé pour un utilisateur) en fonction de leurs stratégies. Nous démontrons que la méthode améliore la qualité des dialogues en interagissant avec des modèles à base de règles et des modèles d'humains. La seconde approche propose d'inclure un mécanisme d'apprentissage par transfert dans l'exécution d'un algorithme d'apprentissage profond par renforcement, \acrlong{DQN}.
+
+La seconde piste avance l'idée selon laquelle les premières interactions avec un nouvel utilisateur devraient être gérées par un système de dialogue sécurisé et précautionneux avant d'utiliser un système de dialogue spécialisé. L'approche se divise en deux étapes. La première étape consiste à apprendre une stratégie sécurisée avec de l'apprentissage par renforcement. À cet effet, nous proposons un nouveau framework d'apprentissage par renforcement sous contrainte en états continus ainsi que des algorithmes les solutionnant. En particulier, nous validons, en termes de sécurité et d'efficacité, une extension de \acrlong{FTQ} pour les deux applications sous contraintes : les systèmes de dialogue et la conduite autonome. La deuxième étape implique l'utilisation de ces stratégies sécurisées lors des premières interactions avec un nouvel utilisateur ; cette méthode est une extension de l'algorithme classique d'exploration, $\epsilon$-greedy.
+
+
+%----------------------------------------------------------------------------------------
+%	THANKS YOU PAGE
+%----------------------------------------------------------------------------------------
+
+\newpage
+%
+%\vfill
+%\begin{center}
+%{\Huge Acknowledgement and Thanks}\\[1cm]
+%\end{center}
+
+\chapter*{Acknowledgement and Thanks}
+
+Je tiens tout d'abord à remercier Olivier pour m'avoir aidé à faire émerger des idées nouvelles et à leur donner vie ensemble dans une ambiance de grande camaraderie. Un merci à Romain pour m'avoir guidé dès le début de la thèse ; sa rigueur et ses précieuses relectures ont grandement contribué à la qualité de mes travaux. J'aimerais aussi remercier Tanguy pour son enthousiasme et sa volonté d'approndir les concepts les plus techniques, et Jean-Léon pour son approche alternative et pédagogique de mes travaux.
+
+Je voudrais ensuite remercier Alain Dutech et Fabrice Lefèvre d'avoir accepté d'être les rapporteurs de cette thèse. Mes remerciements s'adressent aussi à Lina Maria Rojas-Barahona et Philippe Preux, respectivement examinatrice et Président du jury.
+
+Je tiens également à remercier mes collègues, notamment Edouard pour sa contribution enrichissante à notre dernier projet, Merwan, Ronan, Hatim, Mathieu, Florian, Xuedong, Guillaume, Julien, Omar, Pierre, et Odalric pour les discussions techniques qui m'ont permis d'avancer.  Je souhaite aussi remercier les personnes avec qui j'ai partagé mon quotidien, notamment Masha, William, Tatiana, Lilian, Michal,  Mateo, Emilie, Amélie, et Phillipe.
+
+En outre, je n'oublie pas mes collègues d'Orange Labs, en particulier Myriam pour la dimension humaine de son encadrement.
+
+Enfin, je suis reconnaissant envers mes proches pour leur soutien et leurs encouragements tout au long de mon cursus universitaire.
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+%\usechapterimagefalse % If you don't want to include a chapter image, use this to toggle images off - it can be enabled later with \usechapterimagetrue
+
+\chapterimage{chapter_head_1.pdf} % Table of contents heading image
+
+\pagestyle{empty} % Disable headers and footers for the following pages
+
+\tableofcontents % Print the table of contents itself
+
+% list of items
+\begingroup
+\makeatletter
+\chapter*{List of items}
+\section*{Figures}
+\@starttoc{lof}
+\let\clearpage\relax
+%\listoftables
+\section*{Tables}
+\@starttoc{lot}
+\section*{Algorithms}
+\@starttoc{loa}
+\makeatother
+\endgroup
+
+
+
+\cleardoublepage % Forces the first chapter to start on an odd page so it is not on the right side of the book
+
+\pagestyle{fancy} % Enable headers and footers again
+
+%----------------------------------------------------------------------------------------
+%	GLOSSARY
+%----------------------------------------------------------------------------------------
+\clearpage
+
+\printglossary[numberedsection,type=symbols,style=list,nogroupskip]
+
+%\printglossary[type=\acronymtype, style=myList]
+\printglossary[type=\acronymtype]
+%\printglossaries
+\clearpage
