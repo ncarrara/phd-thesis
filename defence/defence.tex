@@ -4,14 +4,22 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{times}
-\usepackage[T1]{fontenc}
 \usefonttheme{serif}
+\usepackage{xkeyval}
+\usepackage{todonotes}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[acronym,toc,symbols]{glossaries}
 
-\title[TITLE]{TITLE}
-\subtitle{SUB TITLE}
-\author{AUTHOR}
-\institute[SCHOOL]{SCHOOL COLLEGE UNIVERSITY}
-\date{\today}
+\input{../mathdef.tex}
+%\input{../glossary.tex}
+\input{symbol.tex}
+
+\presetkeys{todonotes}{inline}{}
+\title[TITLE]{Apprentissage par renforcement pour l'optimisation des systèmes de dialogue via l'adaptation à l'utilisateur.}
+\subtitle{Soutenance de thèse.}
+\author{Nicolas Carrara}
+\institute[ULille]{Université de Lille}
+\date{Le 18 Décembre 2019}
 
 \setbeamertemplate{footline}{%
 \hfill%
@@ -32,31 +40,191 @@
     \end{frame}
 
     \section{Introduction}
-    \begin{frame}
-        \begin{block}{Block}
-            Standard beamer block
-        \end{block}
-        \begin{alertblock}{Block}
-            Alert block
+
+    \begin{frame}{Les sytèmes de dialogues}
+
+        \todo{Schéma avec c'est quoi un système de dialogue}
+
+    \end{frame}
+
+    \begin{frame}{Trois types d'applications}
+
+        \begin{itemize}
+            \item Discussion social sans but précis.
+            \item Question-Réponse
+            \item Dialogues orientés tâches.
+        \end{itemize}
+
+        %C'est surtout la troisième problématique qui nous interesse.
+        \todo{mettre en gras ou avant la troisème problématique}
+
+    \end{frame}
+
+    \begin{frame}{Personalisation}
+
+        % avec l'essort du smartphone/car/etc
+        De plus en plus de systèmes deviennent personnels
+
+        \begin{itemize}
+            \item Assistants personnels % par définition personnels
+            \item Maisons connectées % parler à l'enfant, les parents etc (les enfants sont moins succeptible de demander certain choses etc)
+            \item Voitures connectées
+            % handfree gps etc
+        \end{itemize}
+
+        \todo{TODO mettre deux trois images ici}
+
+    \end{frame}
+
+    \begin{frame}{Problématique}
+
+        On pourrait discriminer deux types de personalisations
+
+        \begin{itemize}
+            \item Adaptation aux habitudes de la personne.
+            % les rdv sont plutot le dimanche, le medecin s'appelle X, la personne habide dans un coin avec certains restaurant
+            \item Adaptation au type de personne.
+            % personne agée, enfant, dyslesique, culture (red good chine, red wrong europe) etc
+        \end{itemize}
+
+        %C'est surtout la deuxième problématique qui nous interesse.
+        \todo{mettre en gras ou avant la deuxième problématique}
+
+        \begin{alertblock}{Problématique}
+            Comment s'adapter sans a priori?
         \end{alertblock}
-        \begin{exampleblock}{Block}
-            Example block
-        \end{exampleblock}
+
+    \end{frame}
+
+    \begin{frame}{Pistes de recherche}
+
+        %On va explorer
+        Deux directions, toutes deux exploitant l'apprentissage par transfert.
+
+        \begin{itemize}
+            \item Approche classique, avec l'utilisation d'outils existants et leur mise à l'echelle.
+            \item Approche plus conservatrice, en mettant en avant la notion de risque dans la conversation.
+        \end{itemize}
+
+
+        %Mais concrétement,
+        Comment fonctionne un système de dialogue ?
+
+    \end{frame}
+
+    \section{Systèmes de dialogue orientées tâches}
+
+
+
+    \subsection{Pipeline}
+
+
+    \begin{frame}{L'exemple du Slot-Filling}
+
+        Expliquer le slot filling
+
+        Faire la transition sur comment modéliser le processus
+
+    \end{frame}
+
+    \foreach \n in {1,2,3,4,5,6,7}{
+    \begin{frame}{Le processus (\n/7)}
+        \begin{figure}
+            \centering
+            %%\vspace{-1.5em}
+            \includegraphics[scale=0.7,page=1]{img/pipeline\n}
+        \end{figure}
+    \end{frame}
+    }
+
+    \foreach \n in {1,2}{
+    \begin{frame}{Un problème de décision séquentielle (\n/2)}
+        \begin{figure}
+            \centering
+            %%\vspace{-1.5em}
+            \includegraphics[scale=0.55,page=1]{img/pipeline-dp\n}
+        \end{figure}
+    \end{frame}
+    }
+
+
+
+
+    \begin{frame}
+        %On réduit le problème à cette échange
+        \begin{figure}
+            \centering
+            %%\vspace{-1.5em}
+            \includegraphics[scale=1.0,page=1]{../sources/dm-rl/rl-pipeline}
+        \end{figure}
+        \todo{dire a quoi correspond chaque etat, par rapport au slide de slot filling}
+
+        \begin{alertblock}{}
+            Comment décider l'action à choisir en fonction de l'état courant ?
+        \end{alertblock}
+    \end{frame}
+
+    \subsection{RL}
+    \begin{frame}
+
+        A MDP is a tuple $\langle{}\cS,\cA,\reward,\transition,\discountfactor\rangle{}$ where:
+        \begin{itemize}
+            \item  $\cS$ is the state set,
+            \item  $\cA$ is the action set,
+            \item $\reward\in\Real^{\cS \times \cA}$ is the reward function,
+            \item $\transition\in \cM(\cS)^{\cS \times \cA}$ is the transition kernel; $\cM(\cX)$ denotes the probability measure over a set $\cX$.
+            \item $\discountfactor$ is the discount factor.
+        \end{itemize}
+
     \end{frame}
 
     \begin{frame}
+        policy
+
+        Q function
+
+        Bellman control equation
+
     \end{frame}
-    \section{Systèmes de dialogue orientées tâches}
+
     \begin{frame}
+
+        continuous AND unkwon env
+
+        FTQ
+
+        -> unknown env we need sample, if we don't know the user, we don't have samples -> transfer learning
+
     \end{frame}
+
+    \subsection{TL}
+    \begin{frame}
+
+    \end{frame}
+
     \section{Passage à l'échelle de l'apprentissage par transfert}
+
+    \subsection{Sigdial}
+
     \begin{frame}
+        Sigdial
     \end{frame}
-    \section{Apprentissage par transfert sécurisé}
+
+    \subsection{Transfert continu}
+
+    \begin{frame}
+
+        TDQN
+
+    \end{frame}
+
+    \subsection{}
 
     \begin{frame}
         Le plus important dans un nouveau systèmes, c'est de garder l'user. Alors, au lieu d'optimiser, pourquoi ne pas focus sur le fait de pas le faire fuir ?
     \end{frame}
+
+    \section{Apprentissage par transfert sécurisé}
 
     \subsection{epsilon safe}
     \begin{frame}
@@ -64,18 +232,18 @@
         explore
         exploite
         pi safe
-            rajoute une info supplementaire (safery) lié intimement à la reussite, et peut donc guider l'apprentissage
-            eviter les endroits trop unsafe pour garder l'user
+        rajoute une info supplementaire (safery) lié intimement à la reussite, et peut donc guider l'apprentissage
+        eviter les endroits trop unsafe pour garder l'user
     \end{frame}
 
     \begin{frame}
         Les results sont pas probants.
         Pourquoi ?
-            l'environement est trop simple
-            cette information n'est pas exploiter comme il faut
-                single reward suffer from TOO safe TOO unsafe
-                    peut etre quand dans ce cas c'était trop unsafe
-                    comment construit des politiques safe sans end up with extreme behavious ? -> BFTQ
+        l'environement est trop simple
+        cette information n'est pas exploiter comme il faut
+        single reward suffer from TOO safe TOO unsafe
+        peut etre quand dans ce cas c'était trop unsafe
+        comment construit des politiques safe sans end up with extreme behavious ? -> BFTQ
     \end{frame}
 
     \subsection{Créer un système précautionneux, mais pas trop.}
@@ -88,6 +256,18 @@
 
     \section{Conclusion}
     \begin{frame}
+    \end{frame}
+
+    \begin{frame}
+        \begin{block}{Block}
+            Standard beamer block
+        \end{block}
+        \begin{alertblock}{Block}
+            Alert block
+        \end{alertblock}
+        \begin{exampleblock}{Block}
+            Example block
+        \end{exampleblock}
     \end{frame}
 
 

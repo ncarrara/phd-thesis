@@ -8,7 +8,7 @@ clean () {
     rm *.idx 2> /dev/null
     rm *.ilg 2> /dev/null
     rm *.ind 2> /dev/null
-    rm *.log 2> /dev/null
+    %rm *.log 2> /dev/null
     rm *.ptc 2> /dev/null
     rm *.glo 2> /dev/null
     rm *.run.xml 2> /dev/null
