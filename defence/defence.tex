@@ -9,6 +9,43 @@
 \usepackage{todonotes}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage[acronym,toc,symbols]{glossaries}
+\usepackage{subfig}
+\usepackage[block=space,style=authoryear,citestyle=authoryear,sorting=nyt,sortcites=false,autopunct=true,autolang=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber,maxcitenames=1,maxbibnames=99]{biblatex}
+\usepackage{diagbox}
+%\usepackage[block=space,style=authoryear,citestyle=authoryear,sorting=nyt,sortcites=true,autopunct=true,autolang=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
+%\usepackage[backend=biber]{biblatex}
+\definecolor{macouleur}{rgb}{0.75,0.43,0.09}
+\AtBeginSection[]{
+{
+%\setbeamercolor{background canvas}{bg=macouleur}
+\begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=15pt,center,shadow=true,rounded=true]{title}
+        %\usebeamerfont{title}\insertsectionhead\par
+        %\frametitle{Outline for section \thesection}
+        \tableofcontents[currentsection]
+    \end{beamercolorbox}
+    \vfill
+\end{frame}
+}
+}
+\AtBeginSubsection[]{
+{
+\begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+        \usebeamerfont{title}\insertsubsectionhead\par
+        %
+    \end{beamercolorbox}
+    \vfill
+\end{frame}
+}
+}
+
+\addbibresource{../bibliography.bib} % BibTeX bibliography file
+\defbibheading{bibempty}{}
 
 \input{../mathdef.tex}
 %\input{../glossary.tex}
@@ -60,6 +97,24 @@
 
     \end{frame}
 
+    \begin{frame}{\textbf{Systèmes de dialogue} | sans adaptation}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.6\textwidth]{img/adap0.pdf}
+                % Un Anneau pour les gouverner tous
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{\textbf{Systèmes de dialogue} | avec adaptation}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.6\textwidth]{img/adap1.pdf}
+                % comment savoir quel système utiliser ?
+            \end{center}
+        \end{figure}
+    \end{frame}
+
     \begin{frame}{Personalisation}
 
         % avec l'essort du smartphone/car/etc
@@ -91,32 +146,18 @@
         \todo{mettre en gras ou avant la deuxième problématique}
 
         \begin{alertblock}{Problématique}
-            Comment s'adapter sans a priori?
+            Comment s'adapter sans a priori? Utiliser l'apprentissage par transfert.
+            % mais tout d'abord qu'est ce qu'un système de dialogue
         \end{alertblock}
 
     \end{frame}
 
-    \begin{frame}{Pistes de recherche}
-
-        %On va explorer
-        Deux directions, toutes deux exploitant l'apprentissage par transfert.
-
-        \begin{itemize}
-            \item Approche classique, avec l'utilisation d'outils existants et leur mise à l'echelle.
-            \item Approche plus conservatrice, en mettant en avant la notion de risque dans la conversation.
-        \end{itemize}
-
-
-        %Mais concrétement,
-        Comment fonctionne un système de dialogue ?
-
-    \end{frame}
 
     \section{Systèmes de dialogue orientées tâches}
 
 
 
-    \subsection{Pipeline}
+    \subsection{Une architecture modulaire}
 
 
     \begin{frame}{L'exemple du Slot-Filling}
@@ -164,51 +205,268 @@
         \end{alertblock}
     \end{frame}
 
-    \subsection{RL}
-    \begin{frame}
+    \subsection{Apprentissage par renforcement}
+    \begin{frame}{Markov Decision Processes}
 
-        A MDP is a tuple $\langle{}\cS,\cA,\reward,\transition,\discountfactor\rangle{}$ where:
+        Un MDP est un tuple $\langle{}\cS,\cA,\reward,\transition,\discountfactor\rangle{}$ où:
         \begin{itemize}
-            \item  $\cS$ is the state set,
-            \item  $\cA$ is the action set,
-            \item $\reward\in\Real^{\cS \times \cA}$ is the reward function,
+            \item  $\cS$ est l'espace des états,
+            \item  $\cA$ est l'espace des actions,
+            \item $\reward\in\Real^{\cS \times \cA}$ est la fonction de récompense,
             \item $\transition\in \cM(\cS)^{\cS \times \cA}$ is the transition kernel; $\cM(\cX)$ denotes the probability measure over a set $\cX$.
             \item $\discountfactor$ is the discount factor.
         \end{itemize}
 
     \end{frame}
 
-    \begin{frame}
-        policy
+    \begin{frame}{Résoudre un MDP}
+        \begin{itemize}
+            \item A policy $\policy\in\cM(\cA)^{\cS}$ % that maps states to actions
+            \item The return $\return^{\policy} = \sum_{\indextransition=0}^\infty \discountfactor^{\indextransition} \reward(s_{\indextransition},a_{\indextransition})$% expliquer s_i et a_i
+            \item Optimal policy :  $\policy^* = \argmax\limits_{\policy} \mathbb{E}_{\policy} [\return^{\policy}|s_0=s,a_0=a]\ \forall (s,a) \in \cS\times\cA$
 
-        Q function
+            \item $\Q^*(s,a)=\reward(s,a) +\discountfactor \sum_{s'\in \cS}[\transition(s,a,s')\max_{a'\in \cA}\Q^*(s',a')] = \bo Q^*.$
+            % It exists a unique function, denoted as $\Q^*$, that verifies the Bellman Optimality equation:
 
-        Bellman control equation
+            \item $\optimalpolicy(s) \in \argmax\limits_{a\in \cA} \Q^*(s,a)$ is optimal.
+        \end{itemize}
+
 
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}{Algoritmes}
 
-        continuous AND unkwon env
+        \begin{block}{Value-Iteration}
+            \begin{itemize}
+                \item $Q \leftarrow \mathbf{0}$
+                \item $Q(s,a) \leftarrow \bo Q(s,a)\ \forall (s,a)$ until convergence
+                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+            \end{itemize}
+        \end{block}
 
-        FTQ
+        \begin{alertblock}{}
+            \begin{itemize}
+                \item How to compute $\bo Q$ if $\transition$ and $\reward$ unknown?
+                \item How to compute $Q \forall (s,a) \in \cS\times\cA$ if $S$ is continous or very large ?
+            \end{itemize}
+
+        \end{alertblock}
+
+        \begin{block}{Fitted-Q}
+            \begin{itemize}
+                \item $Q \leftarrow \mathbf{0}$
+                \item $Q \leftarrow \Gamma(\{s_{\indextransition},a_{\indextransition}\}_{{\indextransition}\in \T},\{r'_{\indextransition} + \discountfactor  \max_{a'\in\cA} \Q(s'_i,a')\}_{{\indextransition} \in \T})$
+                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+            \end{itemize}
+        \end{block}
+
+
+    \end{frame}
+
+    \begin{frame}{Comment amasser des transitions?}
+
+        Parler du online, epsilon greedy
+
+        \todo{faire un schéma avec un robot, les samples, + FITTEDQ}
 
         -> unknown env we need sample, if we don't know the user, we don't have samples -> transfer learning
 
     \end{frame}
 
-    \subsection{TL}
-    \begin{frame}
+    \subsection{Apprentissage par Transfert}
+    \begin{frame}{Pourquoi transférer ?}
+
+        \begin{figure}
+            \begin{center}
+                \subfloat[jumpstart performance]{
+                \includegraphics[width=0.33\textwidth]{../sources/dm-tl/objectives-jumpstart}
+                \label{fig:objectives-jumpstart}
+                }
+                \subfloat[Learning performance]{
+                \includegraphics[width=0.33\textwidth]{../sources/dm-tl/objectives-learn}
+                \label{fig:objectives-learn}
+                }
+                \subfloat[Asymptotic performance]{
+                \includegraphics[width=0.33\textwidth]{../sources/dm-tl/objectives-asymptote}
+                \label{fig:objectives-asymptote}
+                }
+                \caption{Objectives of Transfert Learning~\parencite{langley2006,LazaricSurvey}}
+                \label{fig:objectives}
+            \end{center}
+        \end{figure}
+
+    \end{frame}
+
+    \begin{frame}{Les différentes formes de transfert}
+
+
+        \begin{itemize}
+            \item Policy
+            \begin{itemize}
+                \item XXX2012 etc (cité ceux lié au dialogue)
+            \end{itemize}
+            \item  etc
+        \end{itemize}
+
+    \end{frame}
+
+    \begin{frame}{Contributions}
+
+        %On va explorer
+        Deux directions, toutes deux exploitant l'apprentissage par transfert.
+
+        \begin{itemize}
+            \item Approche classique, avec l'utilisation d'outils existants et leur mise à l'echelle.
+            \item Approche plus conservatrice, en mettant en avant la notion de risque dans la conversation.
+        \end{itemize}
+
 
     \end{frame}
 
     \section{Passage à l'échelle de l'apprentissage par transfert}
 
-    \subsection{Sigdial}
+    \subsection{Un processus complet pour l'adaptation à l'utilisateur}
 
-    \begin{frame}
-        Sigdial
+
+
+    \foreach \n in {0,1,2,3,4,5,6,7,8,9,10,11,13,14}{
+    \begin{frame}{Le processus}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.75\textwidth]{img/dataflowRobot\n.pdf}
+            \end{center}
+        \end{figure}
     \end{frame}
+    }
+
+    \begin{frame}{\textbf{Sources election} | \textsc{PD-distance}}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{img/pddistance0.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{\textbf{Sources election} | \textsc{PD-distance}}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{img/pddistance.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+    \foreach \n in {0,1,2,3,4}{
+    \begin{frame}{\textbf{Sources election} | \textsc{PD-distance} and euclidian norm}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=1.0\textwidth]{img/euclide\n.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+    }
+
+    \begin{frame}{\textbf{Sources election} | \textsc{K-means}}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.85\textwidth]{img/clustering.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \foreach \n in {0}{
+    \begin{frame}{\textbf{Sources election} | \textsc{K-means}}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.85\textwidth]{img/kmeans\n.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+    }
+    \begin{frame}{\textbf{Sources election} | \textsc{K-medoids}}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.85\textwidth]{img/clustering.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{\textbf{Sources election} | \textsc{K-medoids}}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.85\textwidth]{img/kmedoids.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{\textbf{Adaptation experiments} | simulated users}
+        \begin{figure}
+            \captionsetup[subfigure]{labelformat=empty}
+            \begin{center}
+                \subfloat[Overall score ]{
+                \includegraphics[width=0.5\textwidth]{img/handcraftedScores.pdf}
+                }
+                \subfloat[Task completion]{
+                \includegraphics[width=0.5\textwidth]{img/handcraftedTC.pdf}
+                }
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{\textbf{Adaptation experiments} | human-model users}
+        \begin{figure}
+            \captionsetup[subfigure]{labelformat=empty}
+            \begin{center}
+                \subfloat[Overall score ]{
+                \includegraphics[width=0.5\textwidth]{img/humanScores.pdf}
+                }
+                \subfloat[Task completion]{
+                \includegraphics[width=0.5\textwidth]{img/humanTC.pdf}
+                }
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{\textbf{Cross comparison} | human-model users}
+        \begin{figure}
+            \begin{center}
+                \begin{tabular}{|l|c|c|c|c|c|}
+                    \hline
+                    \backslashbox{u}{s} & vsAlex & vsNico & vsWill & vsMerwan  \\
+                    \hline
+                    Alex & \textbf{1,074}   & 1,021 & 1,073 & 1,071        \\
+                    Nico & 1,249 &     \textbf{1,251}     & 1,249 & 1,240    \\
+                    Will & 1,126 & 1,104 &   \textbf{1,127}      & 1,120    \\
+                    Merwan & 0,989 & 0,858 & 0,980 &    \textbf{ 0,998} \\
+                    \hline
+                \end{tabular}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+
+    \begin{frame}{\textbf{Cross comparison} | simulated users}
+        \begin{figure}
+            \begin{center}
+                \setlength{\tabcolsep}{0.15em}
+                \begin{tabular}{|l|c|c|c|c||c|c|c|c|c|c|c|c|c|}
+                    \hline
+                    \backslashbox{u}{s}& type & $c_{\top}$ & $c_{\bot}$ & x&vspu1 & vspu2 & vspu3 & vspu4 & vspu5 & vspu6 & vspu7   \\
+                    \hline
+
+                    pu1 & DU & 1 & -1 & 0.1 &  \textbf{0,62 }& 0,44 & 0,46 & 0,40 & 0,40 &0,40 & 0,59    \\
+                    pu2 & DU & 5 & -5 & 0.1 & 0,53 &  \textbf{0,82}  & 0,81& 0,51 & 0,70 & 0,41 & 0,71 \\
+                    pu3 & DU & 5 & -5 & 0.2& 0,53 &  \textbf{0,81} & \textbf{0,81}  & 0,52 & 0,72 & 0,42 & 0,71  \\
+                    pu4 & RU & 5 & -5 & 0.1& 0,42 & 0,94 & 0,94 & \textbf{1,00}& 0,92 & 0,85 & 0,94 \\
+                    pu5 & ARPBU & 1 & -1& &0,84& 0,98 & 1,00 & 1,11 &\textbf{1,16}& 1,13 & 1,05    \\
+                    pu6 & AAU & 1 & -1 & &0,95 & 1,06 & 1,07 & 1,29 & 1,27 &\textbf{1,30} & 1,06 \\
+                    pu7 & SAOTU & 1 & -1& &0,43 & 0,26& 0,27 & 0,10 & 0,18 & 0,03 &\textbf{ 0,58}  \\
+                    \hline
+                \end{tabular}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+
+
 
     \subsection{Transfert continu}
 
@@ -270,6 +528,10 @@
         \end{exampleblock}
     \end{frame}
 
+    \begin{frame}
+        \printbibliography[heading=bibempty]
+
+    \end{frame}
 
 \end{document}
 

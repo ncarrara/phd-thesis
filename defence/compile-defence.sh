@@ -39,7 +39,10 @@ clean
 rm $1.pdf 2> /dev/null
 
 texfot pdflatex $1.tex
+texfot biber $1
+texfot pdflatex  $1.tex | grep "Output written on"
 
+clean
 
 clean
 
