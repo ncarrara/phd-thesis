@@ -331,6 +331,7 @@
 
     \foreach \n in {0,1,2,3,4,5,6,7,8,9,10,11,13,14}{
     \begin{frame}{Le processus}
+        \todo{but what if the system database grow ? bandit useless}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=0.75\textwidth]{img/dataflowRobot\n.pdf}
@@ -466,16 +467,38 @@
         \end{figure}
     \end{frame}
 
+    \begin{frame}
+        \begin{itemize}
+            \item (+) la solution fonctionne (en HDC)
+            \item (.) heavily engineered
+            \begin{itemize}
+                \item (+) chaque composant peut être testé et validé
+                \item (-) chaque composant générère des approximations et erreurs.
+                \item (-) formulation complexe
+                \item (-) meta paramètres
+            \end{itemize}
+        \end{itemize}
 
+        Et si on pouvait:
+        \begin{itemize}
+            \item (+) une solution scalable naturellement
+            \item (+) embarqué directement dans un algorithm "low level"
+            \item (+) avec une formulation simple.
+            \item $\rightarrow$ Solution: Transfer Deep Q-Learning (TDQN)
+        \end{itemize}
+
+    \end{frame}
 
 
     \subsection{Transfert continu}
 
-    \foreach \n in {0,1}{
+    \foreach \n in {0}{%,1,2,3,4,5,6,7,8,9,10,11,12}{
     \begin{frame}{TDQN}
+
+        \todo{overlay "won't work"}
         \begin{figure}
             \begin{center}
-                \includegraphics[width=1\textwidth]{img/tdqn\n.pdf}
+                \includegraphics[width=1\textwidth]{img/tdqn1.pdf}
             \end{center}
         \end{figure}
     \end{frame}
@@ -490,48 +513,122 @@
     \section{Apprentissage par transfert sécurisé}
 
     \subsection{epsilon safe}
-    \begin{frame}
 
-        explore
-        exploite
-        pi safe
-        rajoute une info supplementaire (safery) lié intimement à la reussite, et peut donc guider l'apprentissage
-        eviter les endroits trop unsafe pour garder l'user
+    \begin{frame}
+        On rajoute une info supplementaire (safery) lié intimement à la reception du signal de reward
+        (+) peut donc guider l'apprentissage
+        (+) d'une manière plus meta, eviter les dialogues trop catastrophiques pour eviter les dropouts.
+
     \end{frame}
 
     \begin{frame}
-        Les results sont pas probants.
-        Pourquoi ?
-        l'environement est trop simple
-        cette information n'est pas exploiter comme il faut
-        single reward suffer from TOO safe TOO unsafe
-        peut etre quand dans ce cas c'était trop unsafe
-        comment construit des politiques safe sans end up with extreme behavious ? -> BFTQ
+
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.5\textwidth]{img/transfer7.pdf}
+            \end{center}
+        \end{figure}
+
+    \end{frame}
+
+    \begin{frame}{Expériences}
+
+        \todo{Expliquer l'environment et la FTQ lambda utilisé}
+        \todo{Dire que l'autre FTQ (baseline) n'utilise pas le signal de contrainte}
+
+    \end{frame}
+
+    \begin{frame}{Expériences}
+
+        \begin{figure}
+            \captionsetup[subfigure]{labelformat=empty}
+            \begin{center}
+                \subfloat[Score du dialogue]{
+                \includegraphics[width=0.5\textwidth]{img/retgreed.png}
+                }
+                \subfloat[Dialogue arrive à terme]{
+                \includegraphics[width=0.5\textwidth]{img/rewgreed.png}
+                }
+            \end{center}
+        \end{figure}
+
+
+    \end{frame}
+    \begin{frame}{Expériences}
+
+        \begin{block}{Resultats}
+            \begin{itemize}
+                \item (+) Dialogues légérement plus sûr. % on garde donc l'user
+                \item (-) mais cela n'affecte pas le score
+                % et donc La vitesse d'apprentissage.
+            \end{itemize}
+        \end{block}
+
+    \end{frame}
+    \begin{frame}
+
+        On a utilisé une politique lagragienne pour généré des dialogue safe.
+
+        \begin{alertblock}{Limitation}
+            La formulation linéaire de la reward implique des comportements extreme de $\pi_{safe}$: trop safe/trop risky.
+            % et donc ça revient a avoir deux politiques greedy (ou lieu d'une safe+greedy)
+        \end{alertblock}
+
+        \begin{block}{Solution: calibration de lambda}% oral: limitation des politiques lagragiennes
+            On cherche notre strategie safe sur le front de pareto
+            \begin{itemize}
+                \item (-) processus lourd et approximatif % où commencer, quel steps ?
+                \item (-) il se peut qu'il n'existe meme pas de lambda
+                % pas de formulation linéaire de la reward pour un budget donné
+            \end{itemize}
+        \end{block}
+
+        \todo{Montrer un front de pareto: comment trouver la strategie associé à tel point sur le front ?}
+
+        % Ce qui nous amène à la prochaine contribution.
+
     \end{frame}
 
     \subsection{Créer un système précautionneux, mais pas trop.}
 
-    \begin{frame}
+    \begin{frame}{Des objectifs épurés}
 
-        BFTQ
+        Ce qui nous interesse en réalité, c'est d'amasser des données personalisées sans perdre l'utilisateur.
+
+        On propose d'utiliser une politique safe généralisée dès les premiers dialogues.
+
+        Peut t on se contenter d'une politique lagragienne ? Non
 
     \end{frame}
 
-    \section{Conclusion}
     \begin{frame}
-    \end{frame}
 
-    \begin{frame}
-        \begin{block}{Block}
-            Standard beamer block
+        \begin{block}{Solution: Constrainted Markov Decision Processes (CMDP)}
+            \begin{itemize}
+                \item (+) signal de contrainte en plus. DOF supplémentaire. On peut définir un budget de safety et d'afranchir des lambda.
+                \item (-) si le budget change on the fly, ou qu'il n'est pas adapté, on doit reapprendre une politique
+                \item (+) tractable
+                \begin{itemize}
+                    \item  Or Le front de pareto est rarement linéaire, le choix du budget n'est pas évident
+                \end{itemize}
+            \end{itemize}
         \end{block}
-        \begin{alertblock}{Block}
-            Alert block
-        \end{alertblock}
-        \begin{exampleblock}{Block}
-            Example block
-        \end{exampleblock}
     \end{frame}
+
+    \begin{frame}
+        \begin{block}{Encore mieux: Budgeted Markov Decision Processes (BMDP)}
+            \begin{itemize}
+                \item (+) Formulation sous contraintes
+                \item (+) Le budget est un paramètre du modèle (calcul le front de pareto)
+                \item (-) \textit{Intractable}
+            \end{itemize}
+        \end{block}
+
+
+    \end{frame}
+
+
+
 
     \begin{frame}
         \printbibliography[heading=bibempty]
