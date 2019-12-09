@@ -1,11 +1,15 @@
-\documentclass[french]{beamer}
+\documentclass[french,handout]{beamer}
 \usetheme[secheader]{Boadilla}
 \usecolortheme[named=orange]{structure}
 \usepackage[utf8]{inputenc}
+\newcommand{\mathcolorbox}[2]{\colorbox{#1}{$\displaystyle #2$}}
+
 \usepackage[T1]{fontenc}
 \usepackage{times}
 \usefonttheme{serif}
 \usepackage{xkeyval}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+
 \usepackage{todonotes}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage[acronym,toc,symbols]{glossaries}
@@ -492,13 +496,13 @@
 
     \subsection{Transfert continu}
 
-    \foreach \n in {0}{%,1,2,3,4,5,6,7,8,9,10,11,12}{
+    \foreach \n in {0,1,2,3,4,5,6,7,8,9,10,11}{
     \begin{frame}{TDQN}
 
-        \todo{overlay "won't work"}
+        %\todo{overlay "won't work"}
         \begin{figure}
             \begin{center}
-                \includegraphics[width=1\textwidth]{img/tdqn1.pdf}
+                \includegraphics[width=1\textwidth]{drawio/out/tdqn\n.pdf}
             \end{center}
         \end{figure}
     \end{frame}
@@ -583,6 +587,10 @@
             \end{itemize}
         \end{block}
 
+
+    \end{frame}
+
+    \begin{frame}
         \todo{Montrer un front de pareto: comment trouver la strategie associé à tel point sur le front ?}
 
         % Ce qui nous amène à la prochaine contribution.
@@ -591,42 +599,265 @@
 
     \subsection{Créer un système précautionneux, mais pas trop.}
 
-    \begin{frame}{Des objectifs épurés}
+    \begin{frame}{Une formulation plus directe}
 
-        Ce qui nous interesse en réalité, c'est d'amasser des données personalisées sans perdre l'utilisateur.
+        \begin{itemize}
+            \item Amasser des échanges sans perdre l'utilisateur% Ce qui nous interesse en réalité, c'est d'amasser des données personalisées sans perdre l'utilisateur.
+            \item Utilisation d'une politique sécurisée % On propose d'utiliser une politique safe généralisée dès les premiers dialogues.
 
-        On propose d'utiliser une politique safe généralisée dès les premiers dialogues.
+            \item Formulation lagragienne insuffisante
+            % Peut t on se contenter d'une politique lagragienne ? Non
+        \end{itemize}
 
-        Peut t on se contenter d'une politique lagragienne ? Non
 
     \end{frame}
 
-    \begin{frame}
-
-        \begin{block}{Solution: Constrainted Markov Decision Processes (CMDP)}
+    \begin{frame}{Setting}
+        \begin{block}{Markov Decision Process}
             \begin{itemize}
-                \item (+) signal de contrainte en plus. DOF supplémentaire. On peut définir un budget de safety et d'afranchir des lambda.
-                \item (-) si le budget change on the fly, ou qu'il n'est pas adapté, on doit reapprendre une politique
-                \item (+) tractable
-                \begin{itemize}
-                    \item  Or Le front de pareto est rarement linéaire, le choix du budget n'est pas évident
-                \end{itemize}
-            \end{itemize}
-        \end{block}
-    \end{frame}
+                \pause\item $(\cS, \cA, P, R_r, \gamma)$
+                \pause\item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ the $\gamma$-discounted return of rewards.
+                \pause\item Find $\pi^*$ s.t $\forall s\in\cS$:
+                \begin{equation}
+                    \label{eq:mdp}
+                    \begin{array}{lcr}
+                        \displaystyle \pi^* \in \argmax_{\pi\in\cM(\cA)^\cS} \expectedvalue[G_r^\pi | s_0=s]
+                    \end{array}
+                \end{equation}
 
-    \begin{frame}
-        \begin{block}{Encore mieux: Budgeted Markov Decision Processes (BMDP)}
-            \begin{itemize}
-                \item (+) Formulation sous contraintes
-                \item (+) Le budget est un paramètre du modèle (calcul le front de pareto)
-                \item (-) \textit{Intractable}
             \end{itemize}
         \end{block}
 
 
+        \begin{block}{}
+            \begin{itemize}
+                \item \colorbox{green}{(+) \textit{Tractable}}
+                \item \colorbox{red}{(-) Calibration nécessaire}
+                % A l ORAL si formulation sous contrainte
+            \end{itemize}
+        \end{block}
+
     \end{frame}
 
+    \begin{frame}{Setting}
+
+        \begin{block}{\textcolor{blue}{Constrained} Markov Decision Process}
+            \begin{itemize}
+                \item $(\cS, \cA, P, R_r,\textcolor{blue}{R_c}, \gamma,\textcolor{blue}{\beta})$
+                \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ the $\gamma$-discounted return of rewards.
+                \item \textcolor{blue}{ $G_c^\pi = \sum_{t=0}^\infty \gamma^t R_c(s_t, a_t)$ the $\gamma$-discounted return of costs.}
+                \item Find $\pi^*$ s.t $\forall s\in\cS$:
+                \begin{equation}
+                    \label{eq:cmdp}
+                    \begin{array}{lcr}
+                        \displaystyle \pi^* \in \argmax_{\pi\in\cM(\cA)^\cS} \expectedvalue[G_r^\pi | s_0=s] \\
+                        \text{ s.t. }  \textcolor{blue}{\expectedvalue[G_c^\pi | s_0=s] \leq \beta}
+                    \end{array}
+                \end{equation}
+            \end{itemize}
+        \end{block}
+
+        \begin{block}{}
+            \begin{itemize}
+                \item \colorbox{green}{(+) \textit{Tractable}}
+                \item \colorbox{green}{(+) DOF supplémentaire}% A L ORAL On peut définir un budget de safety et d'afranchir des lambda.}
+                \item \colorbox{red}{(-) budget fixé}
+                % A L ORAL si le budget change on the fly, ou qu'il n'est pas adapté, on doit reapprendre une politique,  Or Le front de pareto est rarement linéaire, le choix du budget n'est pas évident
+            \end{itemize}
+        \end{block}
+
+    \end{frame}
+
+    \begin{frame}{Setting}
+
+        \begin{block}{\textcolor{blue}{Budgeted} Markov Decision Process}
+            \begin{itemize}
+                \item $(\cS, \cA, P, R_r,{R_c}, \gamma,\textcolor{blue}{\cB})$
+                \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ the $\gamma$-discounted return of rewards.
+                \item  $G_c^\pi = \sum_{t=0}^\infty \gamma^t R_c(s_t, a_t)$ the $\gamma$-discounted return of costs.
+                \item Find $\pi^*$ s.t $\forall (s,\textcolor{blue}{\beta})\in\cS\times\textcolor{blue}{\cB}$:
+                \begin{equation}
+                    \label{eq:bmdp}
+                    \begin{array}{lcr}
+                        \displaystyle \pi^* \in \argmax_{\pi\in\cM(\cA\times\textcolor{blue}{\cB})^{\cS\times\textcolor{blue}{\cB}}} \expectedvalue[G_r^\pi | s_0=s,\textcolor{blue}{\beta_0=\beta}] \\
+                        \text{ s.t. }  \expectedvalue[G_c^\pi | s_0=s,\textcolor{blue}{\beta_0=\beta}] \leq \beta
+                    \end{array}
+                \end{equation}
+            \end{itemize}
+        \end{block}
+
+
+        \begin{block}{}
+            \begin{itemize}
+                \item \colorbox{green}{(+) DOF supplémentaire}
+                \item \colorbox{green}{(+) Le budget est un paramètre du modèle} % A L ORAL (calcul le front de pareto)}
+                \item \colorbox{red}{(-) \textit{Intractable}}
+            \end{itemize}
+        \end{block}
+
+    \end{frame}
+
+
+    \begin{frame}{Augmented Settings}
+
+        \textbf{Budgeted policies} $\pi$
+        \begin{itemize}
+            \pause\item $ \pi:\underbrace{(s,\beta)}_{\os} \rightarrow \underbrace{(a,\beta')}_{\oa}$
+        \end{itemize}
+
+        \textbf{Domain}
+        \begin{itemize}
+            \pause\item States $\ocS = \cS\times\cB$.
+            \pause\item Actions $\ocA = \cA\times\cB$.
+            \pause\item Dynamics $\ov{P}$
+            %$\left((s',\beta') \condbar (s,\beta), (a, \beta_a)\right) \eqdef P(s'|s, a)\delta(\beta' - \beta_a)$.
+        \end{itemize}
+        \textbf{2D signals}
+        \begin{enumerate}
+            \pause\item Rewards $R = (R_r, R_c)$
+            \pause\item Returns $G^\pi = (G_r^\pi, G_c^\pi)$
+            \pause\item $V^\pi(\os) = (V_r^\pi, V_c^\pi) \eqdef \expectedvalue\left[ G^\pi \condbar \ov{s_0} = \os\right]$
+            \pause\item $Q^\pi(\os, \oa)= (Q_r^\pi, Q_c^\pi) \eqdef \expectedvalue\left[ G^\pi \condbar \ov{s_0} = \os, \ov{a_0} = \oa\right]$
+        \end{enumerate}
+
+    \end{frame}
+
+    \begin{frame}{Augmented Optimality}
+        \begin{definition}
+            In that order, we want to:
+            \begin{enumerate}
+                \item[(i)] \pause\colorbox{red}{Respect the budget $\beta$}:
+                \begin{equation*}
+                    \Pi_a(\os) \eqdef \{\pi\in\Pi: V_c^\pi(s, \beta) \mathcolorbox{red}{\leq \beta}\}
+                \end{equation*}
+                \item[(ii)] \pause\colorbox{green}{Maximise the rewards}:
+                \begin{equation*}
+                    V_r^*(\os) \eqdef \mathcolorbox{green}{\max}_{\pi\in\Pi_a(\os)}  V_r^\pi(\os) \qquad\quad \Pi_r(\os) \eqdef \mathcolorbox{green}{\argmax}_{\pi\in\Pi_a(\os)}  V_r^\pi(\os)
+                \end{equation*}
+                \item[(iii)] \pause\colorbox{yellow}{Minimise the costs}:
+                \begin{equation*}
+                    V_c^*(\os) \eqdef \mathcolorbox{yellow}{\min}_{\pi\in\Pi_r(\os)}  V_c^\pi(\os), \qquad\quad \Pi^*(\os) \eqdef \mathcolorbox{yellow}{\argmin}_{\pi\in\Pi_r(\os)}  V_c^\pi(\os)
+                \end{equation*}
+            \end{enumerate}
+
+            \pause We define the budgeted action-value function $Q^*$ similarly
+        \end{definition}
+    \end{frame}
+
+    \begin{frame}{Budgeted Bellman Optimality Equation}
+        \begin{theorem}[Budgeted Bellman Optimality Equation]
+            $Q^*$ verifies the following equation:
+            \begin{align*}
+                Q^{*}(\os, \oa) &= \cT Q^{*}(\os, \oa)\\
+                &\eqdef R(\os, \oa) + \gamma \sum_{\os'\in\ocS} \ov{P}(\ov{s'} | \os, \oa)\sum_{\ov{a'}\in \ocA} \pi_\text{greedy}(\ov{a'}|\ov{s'}; Q^*) Q^{*}(\ov{s'}, \ov{a'}),
+            \end{align*}
+            where the greedy policy $\pi_\text{greedy}$ is defined by:
+            \begin{align*}
+                \pi_\text{greedy}(\oa|\os; Q) \in &\mathcolorbox{yellow}{\argmin}_{\rho\in\Pi_r^Q} \expectedvalueover{\oa\sim\rho}Q_c(\os, \oa), \\
+                \text{where }\quad \Pi_r^Q \eqdef &\mathcolorbox{green}{\argmax}_{\rho\in\cM(\ocA)} \expectedvalueover{\oa\sim\rho} Q_r(\os, \oa) \\
+                & \text{ s.t. }  \expectedvalueover{\oa\sim\rho} Q_c(\os, \oa) \mathcolorbox{red}{\leq \beta}
+            \end{align*}
+        \end{theorem}
+        % ORAL: comment résoudre ce problème ?
+    \end{frame}
+
+
+    \foreach \n in {0,1,2,3,4}{
+    \begin{frame}{Résoudre le problème non linéaire}
+        \begin{figure}
+            \centering
+            %%\vspace{-1.5em}
+            \includegraphics[scale=1.0,page=1]{img/b\n}
+        \end{figure}
+    \end{frame}
+    }
+
+    \begin{frame}{Comportement asymptotique}
+
+        \begin{itemize}
+            \item  Si $|\cA| \geq 2$, \colorbox{red}{$\cT$ n'est pas une contraction}
+            \item \colorbox{green}{sauf quand les $Q$-fonctions sont lisses ie:}
+            \begin{itemize}
+                \item "$Q_r$ est $L$-Lipschitz par rapport à $Q_c$", avec $L<\frac{1}{\gamma}-1$
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+
+        \begin{block}{Budgeted Value-Iteration}
+            \begin{itemize}
+                \item $Q \leftarrow \mathbf{0}$
+                \item $Q(s,a) \leftarrow \bo Q(s,a)\ \forall (s,a)$ until convergence
+                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+            \end{itemize}
+        \end{block}
+
+        \begin{alertblock}{}
+            \begin{itemize}
+                \item How to compute $\bo Q$ if $\transition$ and $\reward$ unknown?
+                \item How to compute $Q \forall (s,a) \in \cS\times\cA$ if $S$ is continous or very large ?
+            \end{itemize}
+
+        \end{alertblock}
+
+        \begin{block}{Budgeted Fitted-Q}
+            \begin{itemize}
+                \item $Q \leftarrow \mathbf{0}$
+                \item $Q \leftarrow \Gamma(\{s_{\indextransition},a_{\indextransition}\}_{{\indextransition}\in \T},\{r'_{\indextransition} + \discountfactor  \max_{a'\in\cA} \Q(s'_i,a')\}_{{\indextransition} \in \T})$
+                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+            \end{itemize}
+        \end{block}
+    \end{frame}
+
+    \begin{frame}{Budgeted Fitted-Q}
+        \begin{algorithm}[H]
+            \DontPrintSemicolon
+            \KwData{$\cD$}
+            \KwResult{$Q^*$}
+            $Q_{\theta_0} \leftarrow 0$\;
+            \Repeat{convergence}{
+            $\theta_{k+1} \leftarrow \argmin_\theta \cL(Q_\theta, \hat{\cT} Q_{\theta_{k}}; \cD)$\;
+            }
+            \caption{Budgeted Fitted-Q Iteration}
+        \end{algorithm}
+
+        \begin{itemize}
+            \item $\cD=\{(\os_i,\oa_i,r_i,\os_i'\}_{i\in [0,N]}$
+            \item $\hat{\cT} Q(\os, \oa, r, \os') \eqdef r + \gamma \sum_{\ov{a'}\in \cA} \pi_\text{greedy}(\ov{a'}|\ov{s'}; Q) Q(\ov{s'}, \ov{a'}).$
+            \pause \item $\cL(Q_\theta, Q_\text{target};\cD) = \sum_{\cD} ||Q_\theta(\os, \oa) - Q_\text{target}(\os, \oa, r, \os')||_2^2$
+        \end{itemize}
+    \end{frame}
+
+
+    \begin{frame}{Experiments}
+        \begin{center}
+            \includegraphics[width=\textwidth]{img/slot-filling.pdf}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Risk-sensitive exploration}
+
+        How to collect the batch $\cD$?
+
+        \begin{itemize}
+            \item We propose an $\epsilon$-greedy exploration procedure
+            \begin{itemize}
+                \pause\item Sample an initial budget $\beta_0$
+                \pause\item At each step, where $\os=(s,\beta)$ only explore feasible budgets:
+                \pause\begin{align*}
+                          &\oa = (a, \beta_a)\sim\mathcal{U}(\Delta_{\cA\cB})\\
+                          &\text{ where }  \Delta \text{ is such that }\probability{a, \beta_a|s, \beta} \text{verifies} \expectedvalue[\beta_a]\leq\beta
+                \end{align*}
+            \end{itemize}
+        \end{itemize}
+
+
+    \end{frame}
+
+    \begin{frame}{Experiments: 2D world}
+        \includegraphics[page=1, width=\textwidth]{img/corridors}
+    \end{frame}
 
 
 

@@ -5,8 +5,8 @@ from os.path import isfile, join
 
 for file in listdir("drawio"):
 
-    if isfile(file):
-        print(file)
-        command = "node /home/ncarrara/draw.io-export/bin/drawio.js drawio/{}.xml -o drawio/out/{}.pdf".format(file,file)
-        print(command)
-        os.system(command)
+    # if isfile(file):
+    print(file)
+    command = "node /home/ncarrara/draw.io-export/bin/drawio.js drawio/{} -o drawio/out/{}.pdf --crop".format(file,os.path.splitext(file)[0])
+    print(command)
+    os.system(command)
