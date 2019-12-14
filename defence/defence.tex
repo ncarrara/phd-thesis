@@ -6,10 +6,14 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{times}
+\usepackage{tabularx}
+\usepackage{makecell}
+
+
 \usefonttheme{serif}
 \usepackage{xkeyval}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
-
+\usepackage{booktabs}
 \usepackage{todonotes}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage[acronym,toc,symbols]{glossaries}
@@ -84,7 +88,12 @@
 
     \begin{frame}{Les sytèmes de dialogues}
 
-        \todo{Schéma avec c'est quoi un système de dialogue}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=0.85\textwidth]{drawio/out/sds.pdf}
+                % Un Anneau pour les gouverner tous
+            \end{center}
+        \end{figure}
 
     \end{frame}
 
@@ -93,11 +102,10 @@
         \begin{itemize}
             \item Discussion social sans but précis.
             \item Question-Réponse
-            \item Dialogues orientés tâches.
+            \item \textbf{Dialogues orientés tâches.}
         \end{itemize}
 
         %C'est surtout la troisième problématique qui nous interesse.
-        \todo{mettre en gras ou avant la troisème problématique}
 
     \end{frame}
 
@@ -131,8 +139,6 @@
             % handfree gps etc
         \end{itemize}
 
-        \todo{TODO mettre deux trois images ici}
-
     \end{frame}
 
     \begin{frame}{Problématique}
@@ -142,12 +148,11 @@
         \begin{itemize}
             \item Adaptation aux habitudes de la personne.
             % les rdv sont plutot le dimanche, le medecin s'appelle X, la personne habide dans un coin avec certains restaurant
-            \item Adaptation au type de personne.
+            \item \textbf{Adaptation au type de personne.}
             % personne agée, enfant, dyslesique, culture (red good chine, red wrong europe) etc
         \end{itemize}
 
         %C'est surtout la deuxième problématique qui nous interesse.
-        \todo{mettre en gras ou avant la deuxième problématique}
 
         \begin{alertblock}{Problématique}
             Comment s'adapter sans a priori? Utiliser l'apprentissage par transfert.
@@ -164,26 +169,32 @@
     \subsection{Une architecture modulaire}
 
 
-    \begin{frame}{L'exemple du Slot-Filling}
+    \begin{frame}{Le Slot-Filling}
 
-        Expliquer le slot filling
+        Le système doit remplir un formulaire (\textit{informable}) pour répondre à une réquête (\textit{requestable}).\\
 
-        Faire la transition sur comment modéliser le processus
+        \begin{block}{Exemple: reservation de restaurants.}
+        \begin{itemize}
+            \item \textit{informable}: localisation, fourchette de prix ...
+            \item \textit{requestable}: \textit{informable}+ l'adresse exacte du restaurant, le numéro de téléphone ...
+        \end{itemize}
+        \end{block}
 
     \end{frame}
 
     \foreach \n in {1,2,3,4,5,6,7}{
-    \begin{frame}{Le processus (\n/7)}
+    \begin{frame}{Le processus}
         \begin{figure}
             \centering
             %%\vspace{-1.5em}
+            %\todo{add the last slide with N2N}
             \includegraphics[scale=0.7,page=1]{img/pipeline\n}
         \end{figure}
     \end{frame}
     }
 
     \foreach \n in {1,2}{
-    \begin{frame}{Un problème de décision séquentielle (\n/2)}
+    \begin{frame}{Un problème de décision séquentielle}
         \begin{figure}
             \centering
             %%\vspace{-1.5em}
@@ -195,14 +206,38 @@
 
 
 
-    \begin{frame}
+    \begin{frame}{Un problème de décision séquentielle}
         %On réduit le problème à cette échange
         \begin{figure}
             \centering
             %%\vspace{-1.5em}
             \includegraphics[scale=1.0,page=1]{../sources/dm-rl/rl-pipeline}
         \end{figure}
-        \todo{dire a quoi correspond chaque etat, par rapport au slide de slot filling}
+    \end{frame}
+    \begin{frame}
+        \begin{block}{Succès du dialogue}
+            \begin{itemize}
+                \item Toutes les contraintes de l'utilisateur sont remplies
+                \item Sans erreurs dans la communication
+            \end{itemize}
+        \end{block}
+
+        \begin{block}{Actes de dialogues}
+            \begin{itemize}
+            \item \texttt{request}
+            \item \texttt{inform}
+            \item \texttt{repeat}
+            \item \texttt{explicit/implicit-confirmation}
+            \end{itemize}
+        \end{block}
+
+        \begin{block}{Etats}
+            \begin{itemize}
+                \item Toutes les actions du systèmes.
+                \item Les scores de confiance de chaque slots
+                \item Toutes les demandes de l'utilisateur.
+            \end{itemize}
+        \end{block}
 
         \begin{alertblock}{}
             Comment décider l'action à choisir en fonction de l'état courant ?
@@ -267,13 +302,23 @@
 
     \end{frame}
 
-    \begin{frame}{Comment amasser des transitions?}
+    \begin{frame}{}
 
-        Parler du online, epsilon greedy
 
-        \todo{faire un schéma avec un robot, les samples, + FITTEDQ}
+        \begin{alertblock}{}
+            Comment apprendre face à un utilisateur inconnu?
+        \end{alertblock}
 
-        -> unknown env we need sample, if we don't know the user, we don't have samples -> transfer learning
+
+        \begin{itemize}
+            \item (-) Amasser des transitions et apprendre en ligne (\textit{from scratch})
+            \item (+) Mise à profit de notre expérience avec d'autres utilisateurs
+            \begin{itemize}
+                \item Apprentissage par transfert
+            \end{itemize}
+
+        \end{itemize}
+
 
     \end{frame}
 
@@ -304,13 +349,38 @@
     \begin{frame}{Les différentes formes de transfert}
 
 
-        \begin{itemize}
-            \item Policy
-            \begin{itemize}
-                \item XXX2012 etc (cité ceux lié au dialogue)
-            \end{itemize}
-            \item  etc
-        \end{itemize}
+        \begin{table}
+            \centering
+            \resizebox{\textwidth}{!}{
+            \begin{tabular}{llll}
+                \hline
+                & Knowledge & Setting & Metric \\ \hline
+
+                \hline
+                \textbf{cross domain} &&&\\
+                \hline
+                \cite{Gasic2013}& parameter (transitions/policy)  & \makecell[l]{mono-task} & all         \\
+                \cite{Keizer2018-tl-dialogue}& parameter (policy)& \makecell[l]{generic-task} & all      \\
+                \cite{Chen2018-tl-dialogue}& parameter (policy) & \makecell[l]{generic-task} & all       \\
+                \cite{Ilievski2018-tl-dialogue}& parameter (policy) & \makecell[l]{mono-task}& all      \\
+                \hline
+                \textbf{user adaptation} &&&\\
+                \hline
+                \cite{casanueva2015-tl-dialogue}& parameter (transitions/policy) & \makecell[l]{multi-task} & all         \\
+                \cite{Genevay2016}& \makecell[l]{transitions \\ parameter (policy)} & \makecell[l]{multi-task}& all   \\
+                \cite{Mo2018-tl-dialogue-PETAL}& parameter ($\Q$-function, DST) & \makecell[l]{generic-task}& all        \\
+                \hline
+                \textbf{dialogue evaluation} &&&\\
+                \hline
+                \cite{elasri2014-tl-dialogue}& representation (reward function) & \makecell[l]{generic-task} & all        \\
+                \hline
+
+            \end{tabular}
+            }
+            \caption{Transfer Learning for Dialogue Systems}
+            \label{table:survey}
+        \end{table}
+
 
     \end{frame}
 
@@ -335,7 +405,7 @@
 
     \foreach \n in {0,1,2,3,4,5,6,7,8,9,10,11,13,14}{
     \begin{frame}{Le processus}
-        \todo{but what if the system database grow ? bandit useless}
+        %{but what if the system database grow ? bandit useless}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=0.75\textwidth]{img/dataflowRobot\n.pdf}
@@ -403,15 +473,17 @@
     \end{frame}
 
     \begin{frame}{\textbf{Adaptation experiments} | simulated users}
-        \todo{show dialogue lenghts}
         \begin{figure}
             \captionsetup[subfigure]{labelformat=empty}
             \begin{center}
                 \subfloat[Overall score ]{
-                \includegraphics[width=0.5\textwidth]{img/handcraftedScores.pdf}
+                \includegraphics[width=0.33\textwidth]{img/handcraftedScores.pdf}
+                }
+                \subfloat[Longueur du dialogue]{
+                \includegraphics[width=0.33\textwidth]{img/handcraftedDialoguesize.pdf}
                 }
                 \subfloat[Task completion]{
-                \includegraphics[width=0.5\textwidth]{img/handcraftedTC.pdf}
+                \includegraphics[width=0.33\textwidth]{img/handcraftedTC.pdf}
                 }
             \end{center}
         \end{figure}
@@ -422,10 +494,14 @@
             \captionsetup[subfigure]{labelformat=empty}
             \begin{center}
                 \subfloat[Overall score ]{
-                \includegraphics[width=0.5\textwidth]{img/humanScores.pdf}
+                \includegraphics[width=0.33\textwidth]{img/humanScores.pdf}
                 }
+                \subfloat[Longueur du dialogue]{
+                \includegraphics[width=0.33\textwidth]{img/humanDialoguesize.pdf}
+                }
+
                 \subfloat[Task completion]{
-                \includegraphics[width=0.5\textwidth]{img/humanTC.pdf}
+                \includegraphics[width=0.33\textwidth]{img/humanTC.pdf}
                 }
             \end{center}
         \end{figure}
@@ -511,7 +587,15 @@
     \subsection{}
 
     \begin{frame}
-        Le plus important dans un nouveau systèmes, c'est de garder l'user. Alors, au lieu d'optimiser, pourquoi ne pas focus sur le fait de pas le faire fuir ?
+        Lors de l'adoption d'un nouveau système, l'utilisateur est plus suceptible d'abandonner rapidement.
+        \begin{block}{}
+            \begin{itemize}
+                \item On va apprendre une nouvelle strategie de dialogue,
+                \item tout en prenant soin de ne pas "brusquer" l'utilisateur
+                \begin{itemize}\item notion de \textit{safety}\end{itemize}
+            \end{itemize}
+        \end{block}
+
     \end{frame}
 
     \section{Apprentissage par transfert sécurisé}
@@ -519,9 +603,11 @@
     \subsection{epsilon safe}
 
     \begin{frame}
-        On rajoute une info supplementaire (safery) lié intimement à la reception du signal de reward
-        (+) peut donc guider l'apprentissage
-        (+) d'une manière plus meta, eviter les dialogues trop catastrophiques pour eviter les dropouts.
+        On rajoute une info supplementaire (safety): %lié intimement à la reception du signal de reward:
+        \begin{itemize}
+            \item (+) peut donc guider l'apprentissage (safe $\rightarrow$ reward)
+            \item (+) d'une manière plus meta, eviter les dialogues trop catastrophiques pour eviter les dropouts.
+        \end{itemize}
 
     \end{frame}
 
@@ -537,8 +623,27 @@
 
     \begin{frame}{Expériences}
 
-        \todo{Expliquer l'environment et la FTQ lambda utilisé}
-        \todo{Dire que l'autre FTQ (baseline) n'utilise pas le signal de contrainte}
+        \begin{block}{Environnement}
+            \begin{itemize}
+                \item \texttt{ask-next}%: ask next slot (with ASR errors).
+                \item \texttt{repeat-oral} (safe + ASR errors)%: repeat current slot (with ASR errors).
+                \item \texttt{repeat-numpad} (unsafe)%: repeat current slot using numeric pad (without ASR errors).
+                \item \texttt{summarize-inform}
+                %: summarise slots values and return the form result. If values are correct, the dialogue ends successfully, if not, the slot values are reset and the dialogue continues from the first slot.
+            \end{itemize}
+
+            Raccrochage: $C: \cS\times\cA \rightarrow \{0,1\}$
+
+        \end{block}
+
+        \begin{block}{Apprentissage}
+            \begin{itemize}
+                \item FTQ avec $R \leftarrow R + \lambda C$
+                \item Safe: $\lambda = 1000$
+                \item Unsafe: $\lambda = 0$ (baseline)
+            \end{itemize}
+        \end{block}
+
 
     \end{frame}
 
@@ -558,54 +663,65 @@
 
 
     \end{frame}
-    \begin{frame}{Expériences}
-
-        \begin{block}{Resultats}
-            \begin{itemize}
-                \item (+) Dialogues légérement plus sûr. % on garde donc l'user
-                \item (-) mais cela n'affecte pas le score
-                % et donc La vitesse d'apprentissage.
-            \end{itemize}
-        \end{block}
-
-    \end{frame}
+    %    \begin{frame}{Expériences}
+    %
+    %        \begin{block}{Resultats}
+    %            \begin{itemize}
+    %                \item (+) Dialogues très légérement plus sûr. % on garde donc l'user
+    %                \item (-) mais cela n'affecte pas le score
+    %                % et donc La vitesse d'apprentissage.
+    %            \end{itemize}
+    %        \end{block}
+    %
+    %    \end{frame}
     \begin{frame}
 
         On a utilisé une politique lagragienne pour généré des dialogue safe.
 
         \begin{alertblock}{Limitation}
             La formulation linéaire de la reward implique des comportements extreme de $\pi_{safe}$: trop safe/trop risky.
-            % et donc ça revient a avoir deux politiques greedy (ou lieu d'une safe+greedy)
+            % , Il est donc possible que les comportements soient les mêmes avec ou sans signal de safety. Donc ça revient a avoir deux politiques greedy (ou lieu d'une safe+greedy)
         \end{alertblock}
 
         \begin{block}{Solution: calibration de lambda}% oral: limitation des politiques lagragiennes
             On cherche notre strategie safe sur le front de pareto
-            \begin{itemize}
-                \item (-) processus lourd et approximatif % où commencer, quel steps ?
-                \item (-) il se peut qu'il n'existe meme pas de lambda
-                % pas de formulation linéaire de la reward pour un budget donné
-            \end{itemize}
         \end{block}
 
 
     \end{frame}
 
+    \foreach \n in {0,1}{
+    \begin{frame}{}
+        \begin{figure}
+            \begin{center}
+                \includegraphics[width=1\textwidth]{drawio/out/pareto\n.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+    }
+
     \begin{frame}
-        \todo{Montrer un front de pareto: comment trouver la strategie associé à tel point sur le front ?}
-
-        % Ce qui nous amène à la prochaine contribution.
-
+        \begin{alertblock}{Limitations}
+            \begin{itemize}
+                \item (-) processus lourd et approximatif % où commencer, quel steps ?
+                \item (-) il se peut qu'il n'existe même pas de lambda
+                % pas de formulation linéaire de la reward pour un budget donné
+            \end{itemize}
+        \end{alertblock}
+        \begin{exampleblock}{Solution}
+            Budgeted Reinforcement Learning.
+            % Ce qui nous amène à la prochaine contribution: BRL
+        \end{exampleblock}
     \end{frame}
 
-    \subsection{Créer un système précautionneux, mais pas trop.}
+    \subsection{Maîtrise du risque en RL}
 
     \begin{frame}{Une formulation plus directe}
 
         \begin{itemize}
             \item Amasser des échanges sans perdre l'utilisateur% Ce qui nous interesse en réalité, c'est d'amasser des données personalisées sans perdre l'utilisateur.
             \item Utilisation d'une politique sécurisée % On propose d'utiliser une politique safe généralisée dès les premiers dialogues.
-
-            \item Formulation lagragienne insuffisante
+            \item Formulation linéaire de la reward insuffisante
             % Peut t on se contenter d'une politique lagragienne ? Non
         \end{itemize}
 
@@ -632,7 +748,7 @@
         \begin{block}{}
             \begin{itemize}
                 \item \colorbox{green}{(+) \textit{Tractable}}
-                \item \colorbox{red}{(-) Calibration nécessaire}
+                \item \colorbox{red}{(-) Calibration nécessaire (quel $\lambda$ ?)}
                 % A l ORAL si formulation sous contrainte
             \end{itemize}
         \end{block}
@@ -660,9 +776,11 @@
         \begin{block}{}
             \begin{itemize}
                 \item \colorbox{green}{(+) \textit{Tractable}}
-                \item \colorbox{green}{(+) DOF supplémentaire}% A L ORAL On peut définir un budget de safety et d'afranchir des lambda.}
-                \item \colorbox{red}{(-) budget fixé}
+                \item \colorbox{green}{(+) DOF supplémentaire}% A L ORAL On peut définir un budget de safety , formuation plus naturelle
+                \item \colorbox{red}{(-) Calibration nécessaire (budget fixé)}
                 % A L ORAL si le budget change on the fly, ou qu'il n'est pas adapté, on doit reapprendre une politique,  Or Le front de pareto est rarement linéaire, le choix du budget n'est pas évident
+
+
             \end{itemize}
         \end{block}
 
@@ -689,9 +807,10 @@
 
         \begin{block}{}
             \begin{itemize}
+                \item \colorbox{red}{(-) \textit{Non Tractable}}
+                \item \colorbox{green}{(+) Pas besoin de calibration, le budget est un paramètre de la politique}
                 \item \colorbox{green}{(+) DOF supplémentaire}
-                \item \colorbox{green}{(+) Le budget est un paramètre du modèle} % A L ORAL (calcul le front de pareto)}
-                \item \colorbox{red}{(-) \textit{Intractable}}
+                % A L ORAL On peut définir un budget de safety et d'afranchir des lambda.}
             \end{itemize}
         \end{block}
 
@@ -753,7 +872,7 @@
             \end{align*}
             where the greedy policy $\pi_\text{greedy}$ is defined by:
             \begin{align*}
-                \pi_\text{greedy}(\oa|\os; Q) \in &\mathcolorbox{yellow}{\argmin}_{\rho\in\Pi_r^Q} \expectedvalueover{\oa\sim\rho}Q_c(\os, \oa), \\
+                \pi_\text{greedy}(\cdot|\os; Q) \in &\mathcolorbox{yellow}{\argmin}_{\rho\in\Pi_r^Q} \expectedvalueover{\oa\sim\rho}Q_c(\os, \oa), \\
                 \text{where }\quad \Pi_r^Q \eqdef &\mathcolorbox{green}{\argmax}_{\rho\in\cM(\ocA)} \expectedvalueover{\oa\sim\rho} Q_r(\os, \oa) \\
                 & \text{ s.t. }  \expectedvalueover{\oa\sim\rho} Q_c(\os, \oa) \mathcolorbox{red}{\leq \beta}
             \end{align*}
@@ -775,7 +894,7 @@
     \begin{frame}{Comportement asymptotique}
 
         \begin{itemize}
-            \item  Si $|\cA| \geq 2$, \colorbox{red}{$\cT$ n'est pas une contraction}
+            \item \colorbox{red}{$\cT$ n'est pas une contraction}
             \item \colorbox{green}{sauf quand les $Q$-fonctions sont lisses ie:}
             \begin{itemize}
                 \item "$Q_r$ est $L$-Lipschitz par rapport à $Q_c$", avec $L<\frac{1}{\gamma}-1$
@@ -788,15 +907,15 @@
         \begin{block}{Budgeted Value-Iteration}
             \begin{itemize}
                 \item $Q \leftarrow \mathbf{0}$
-                \item $Q(s,a) \leftarrow \bo Q(s,a)\ \forall (s,a)$ until convergence
-                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+                \item $Q(\os,\oa) \leftarrow \bo Q(\os,\oa)\ \forall (\os,\oa)$ until convergence (which might not happen)
+                \item Return $\pi(\os) = \pi_\text{greedy}(\cdot|\os; Q)$
             \end{itemize}
         \end{block}
 
         \begin{alertblock}{}
             \begin{itemize}
-                \item How to compute $\bo Q$ if $\transition$ and $\reward$ unknown?
-                \item How to compute $Q \forall (s,a) \in \cS\times\cA$ if $S$ is continous or very large ?
+                \item How to compute $\bo Q$ if $\transition$, $\reward$ and $\constraint$ are unknown?
+                \item How to compute $Q \forall (\os,\oa) \in \ocS\times\ocA$ if $\ocS$ is continous or very large ?
             \end{itemize}
 
         \end{alertblock}
@@ -804,35 +923,15 @@
         \begin{block}{Budgeted Fitted-Q}
             \begin{itemize}
                 \item $Q \leftarrow \mathbf{0}$
-                \item $Q \leftarrow \Gamma(\{s_{\indextransition},a_{\indextransition}\}_{{\indextransition}\in \T},\{r'_{\indextransition} + \discountfactor  \max_{a'\in\cA} \Q(s'_i,a')\}_{{\indextransition} \in \T})$
-                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+                \item $Q \leftarrow \Gamma(\{\os_{\indextransition},\oa_{\indextransition}\}_{{\indextransition}\in \T},\{r'_{\indextransition} + \gamma \sum_{\ov{a}'\in \cA} \pi_\text{greedy}(\ov{a}'|\ov{s}'_{\indextransition}; Q) Q(\ov{s}'_{\indextransition}, \ov{a}')_{{\indextransition} \in \T})$
+                \item Return $\pi(\os) = \pi_\text{greedy}(\cdot|\os; Q)$
             \end{itemize}
         \end{block}
     \end{frame}
 
-    \begin{frame}{Budgeted Fitted-Q}
-        \begin{algorithm}[H]
-            \DontPrintSemicolon
-            \KwData{$\cD$}
-            \KwResult{$Q^*$}
-            $Q_{\theta_0} \leftarrow 0$\;
-            \Repeat{convergence}{
-            $\theta_{k+1} \leftarrow \argmin_\theta \cL(Q_\theta, \hat{\cT} Q_{\theta_{k}}; \cD)$\;
-            }
-            \caption{Budgeted Fitted-Q Iteration}
-        \end{algorithm}
-
-        \begin{itemize}
-            \item $\cD=\{(\os_i,\oa_i,r_i,\os_i'\}_{i\in [0,N]}$
-            \item $\hat{\cT} Q(\os, \oa, r, \os') \eqdef r + \gamma \sum_{\ov{a'}\in \cA} \pi_\text{greedy}(\ov{a'}|\ov{s'}; Q) Q(\ov{s'}, \ov{a'}).$
-            \pause \item $\cL(Q_\theta, Q_\text{target};\cD) = \sum_{\cD} ||Q_\theta(\os, \oa) - Q_\text{target}(\os, \oa, r, \os')||_2^2$
-        \end{itemize}
-    \end{frame}
-
-
     \begin{frame}{Experiments}
         \begin{center}
-            \includegraphics[width=\textwidth]{img/slot-filling.pdf}
+            \includegraphics[width=0.75\textwidth]{img/slot-filling.pdf}
         \end{center}
     \end{frame}
 
@@ -856,15 +955,42 @@
     \end{frame}
 
     \begin{frame}{Experiments: 2D world}
-        \includegraphics[page=1, width=\textwidth]{img/corridors}
+        \begin{center}
+            \includegraphics[page=1, width=0.75\textwidth]{img/corridors}
+        \end{center}
+    \end{frame}
+
+    \section{}
+    \subsection{}
+    \begin{frame}{Conclusion}
+        \begin{itemize}
+            \item Prise de décision dans un SDS = le gestionnaire de dialogue
+            \item Formulation avec du RL
+            \item Comment s'adapater rapidement à un nouvel utilisateur ?
+            \begin{itemize}
+                \item Apprentissage par transfert
+            \end{itemize}
+            \item Deux directions:
+            \begin{itemize}
+                \item Mise à l'échelle de solutions existantes
+                \begin{itemize}
+                    \item PD-distance: Clustering de politiques
+                    \item TDQN: Solution de transfert en continu avec DQN
+                \end{itemize}
+                \item Approche sécurisée:
+                \begin{itemize}
+                    \item $\epsilon$-safe, formulation lagragienne insuffisante
+                    \item $BRL$
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
     \end{frame}
 
 
-
-    \begin{frame}
-        \printbibliography[heading=bibempty]
-
-    \end{frame}
+    %    \begin{frame}
+    %        \printbibliography[heading=bibempty]
+    %
+    %    \end{frame}
 
 \end{document}
 
