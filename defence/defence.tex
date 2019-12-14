@@ -245,29 +245,29 @@
     \end{frame}
 
     \subsection{Apprentissage par renforcement}
-    \begin{frame}{Markov Decision Processes}
+    \begin{frame}{Processus de Decision Markovien}
 
         Un MDP est un tuple $\langle{}\cS,\cA,\reward,\transition,\discountfactor\rangle{}$ où:
         \begin{itemize}
             \item  $\cS$ est l'espace des états,
             \item  $\cA$ est l'espace des actions,
             \item $\reward\in\Real^{\cS \times \cA}$ est la fonction de récompense,
-            \item $\transition\in \cM(\cS)^{\cS \times \cA}$ is the transition kernel; $\cM(\cX)$ denotes the probability measure over a set $\cX$.
-            \item $\discountfactor$ is the discount factor.
+            \item $\transition\in \cM(\cS)^{\cS \times \cA}$ est la fonction de transition; $\cM(\cX)$ est la mesure de probabilité par rapport à l'ensemble $\cX$.
+            \item $\discountfactor$ est le facteur d'actualisation.
         \end{itemize}
 
     \end{frame}
 
     \begin{frame}{Résoudre un MDP}
         \begin{itemize}
-            \item A policy $\policy\in\cM(\cA)^{\cS}$ % that maps states to actions
-            \item The return $\return^{\policy} = \sum_{\indextransition=0}^\infty \discountfactor^{\indextransition} \reward(s_{\indextransition},a_{\indextransition})$% expliquer s_i et a_i
-            \item Optimal policy :  $\policy^* = \argmax\limits_{\policy} \mathbb{E}_{\policy} [\return^{\policy}|s_0=s,a_0=a]\ \forall (s,a) \in \cS\times\cA$
+            \item Politique $\policy\in\cM(\cA)^{\cS}$ % that maps states to actions
+            \item Retour $\return^{\policy} = \sum_{\indextransition=0}^\infty \discountfactor^{\indextransition} \reward(s_{\indextransition},a_{\indextransition})$% expliquer s_i et a_i
+            \item Politique optimale :  $\policy^* = \argmax\limits_{\policy} \mathbb{E}_{\policy} [\return^{\policy}|s_0=s,a_0=a]\ \forall (s,a) \in \cS\times\cA$
 
             \item $\Q^*(s,a)=\reward(s,a) +\discountfactor \sum_{s'\in \cS}[\transition(s,a,s')\max_{a'\in \cA}\Q^*(s',a')] = \bo Q^*.$
             % It exists a unique function, denoted as $\Q^*$, that verifies the Bellman Optimality equation:
 
-            \item $\optimalpolicy(s) \in \argmax\limits_{a\in \cA} \Q^*(s,a)$ is optimal.
+            \item $\optimalpolicy(s) \in \argmax\limits_{a\in \cA} \Q^*(s,a)$ est optimale.
         \end{itemize}
 
 
@@ -278,15 +278,15 @@
         \begin{block}{Value-Iteration}
             \begin{itemize}
                 \item $Q \leftarrow \mathbf{0}$
-                \item $Q(s,a) \leftarrow \bo Q(s,a)\ \forall (s,a)$ until convergence
-                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+                \item $Q(s,a) \leftarrow \bo Q(s,a)\ \forall (s,a)$ jusqu'à convergence
+                \item Renvoyer $\pi(s) = \argmax\limits_{a} Q(s,a)$
             \end{itemize}
         \end{block}
 
         \begin{alertblock}{}
             \begin{itemize}
-                \item How to compute $\bo Q$ if $\transition$ and $\reward$ unknown?
-                \item How to compute $Q \forall (s,a) \in \cS\times\cA$ if $S$ is continous or very large ?
+                \item Comment calculer $\bo Q$ si $\transition$ et $\reward$ sont inconnus?
+                \item Comment calculer $Q \forall (s,a) \in \cS\times\cA$ si $S$ est très grand voir continu ?
             \end{itemize}
 
         \end{alertblock}
@@ -294,8 +294,8 @@
         \begin{block}{Fitted-Q}
             \begin{itemize}
                 \item $Q \leftarrow \mathbf{0}$
-                \item $Q \leftarrow \Gamma(\{s_{\indextransition},a_{\indextransition}\}_{{\indextransition}\in \T},\{r'_{\indextransition} + \discountfactor  \max_{a'\in\cA} \Q(s'_i,a')\}_{{\indextransition} \in \T})$
-                \item Return $\pi(s) = \argmax\limits_{a} Q(s,a)$
+                \item $Q \leftarrow \Gamma(\{s_{\indextransition},a_{\indextransition}\}_{{\indextransition}\in \T},\{r'_{\indextransition} + \discountfactor  \max_{a'\in\cA} \Q(s'_i,a')\}_{{\indextransition} \in \T})$ jusqu'à convergence
+                \item Retourner $\pi(s) = \argmax\limits_{a} Q(s,a)$
             \end{itemize}
         \end{block}
 
@@ -327,19 +327,19 @@
 
         \begin{figure}
             \begin{center}
-                \subfloat[jumpstart performance]{
+                \subfloat[Performance \textit{jumpstart}]{
                 \includegraphics[width=0.33\textwidth]{../sources/dm-tl/objectives-jumpstart}
                 \label{fig:objectives-jumpstart}
                 }
-                \subfloat[Learning performance]{
+                \subfloat[Performance d'apprentissage]{
                 \includegraphics[width=0.33\textwidth]{../sources/dm-tl/objectives-learn}
                 \label{fig:objectives-learn}
                 }
-                \subfloat[Asymptotic performance]{
+                \subfloat[Performance asymptotique]{
                 \includegraphics[width=0.33\textwidth]{../sources/dm-tl/objectives-asymptote}
                 \label{fig:objectives-asymptote}
                 }
-                \caption{Objectives of Transfert Learning~\parencite{langley2006,LazaricSurvey}}
+                \caption{Les objectifs de l'apprentissage par transfert~\parencite{langley2006,LazaricSurvey}}
                 \label{fig:objectives}
             \end{center}
         \end{figure}
@@ -354,31 +354,29 @@
             \resizebox{\textwidth}{!}{
             \begin{tabular}{llll}
                 \hline
-                & Knowledge & Setting & Metric \\ \hline
+                & Connaissance & Cadre & Performance \\ \hline
 
                 \hline
                 \textbf{cross domain} &&&\\
                 \hline
-                \cite{Gasic2013}& parameter (transitions/policy)  & \makecell[l]{mono-task} & all         \\
-                \cite{Keizer2018-tl-dialogue}& parameter (policy)& \makecell[l]{generic-task} & all      \\
-                \cite{Chen2018-tl-dialogue}& parameter (policy) & \makecell[l]{generic-task} & all       \\
-                \cite{Ilievski2018-tl-dialogue}& parameter (policy) & \makecell[l]{mono-task}& all      \\
+                \cite{Gasic2013}& paramètre (transitions/politique)  & \makecell[l]{mono} & tous         \\
+                \cite{Keizer2018-tl-dialogue}& paramètre (politique)& \makecell[l]{generique} & tous      \\
+                \cite{Chen2018-tl-dialogue}& paramètre (politique) & \makecell[l]{generique} & tous       \\
+                \cite{Ilievski2018-tl-dialogue}& paramètre (politique) & \makecell[l]{mono}& tous      \\
                 \hline
                 \textbf{user adaptation} &&&\\
                 \hline
-                \cite{casanueva2015-tl-dialogue}& parameter (transitions/policy) & \makecell[l]{multi-task} & all         \\
-                \cite{Genevay2016}& \makecell[l]{transitions \\ parameter (policy)} & \makecell[l]{multi-task}& all   \\
-                \cite{Mo2018-tl-dialogue-PETAL}& parameter ($\Q$-function, DST) & \makecell[l]{generic-task}& all        \\
+                \cite{casanueva2015-tl-dialogue}& paramètre (transitions/politique) & \makecell[l]{multi} & tous         \\
+                \cite{Genevay2016}& \makecell[l]{transitions \\ paramètre (politique)} & \makecell[l]{multi}& tous   \\
+                \cite{Mo2018-tl-dialogue-PETAL}& paramètre ($\Q$-fonction, DST) & \makecell[l]{generique}& tous        \\
                 \hline
                 \textbf{dialogue evaluation} &&&\\
                 \hline
-                \cite{elasri2014-tl-dialogue}& representation (reward function) & \makecell[l]{generic-task} & all        \\
+                \cite{elasri2014-tl-dialogue}& representation (reward fonction) & \makecell[l]{generique} & tous        \\
                 \hline
 
             \end{tabular}
             }
-            \caption{Transfer Learning for Dialogue Systems}
-            \label{table:survey}
         \end{table}
 
 
@@ -414,7 +412,7 @@
     \end{frame}
     }
 
-    \begin{frame}{\textbf{Sources election} | \textsc{PD-distance}}
+    \begin{frame}{\textsc{PD-distance}}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=1.0\textwidth]{img/pddistance0.pdf}
@@ -422,7 +420,7 @@
         \end{figure}
     \end{frame}
 
-    \begin{frame}{\textbf{Sources election} | \textsc{PD-distance}}
+    \begin{frame}{\textsc{PD-distance}}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=1.0\textwidth]{img/pddistance.pdf}
@@ -430,7 +428,7 @@
         \end{figure}
     \end{frame}
     \foreach \n in {0,1,2,3,4}{
-    \begin{frame}{\textbf{Sources election} | \textsc{PD-distance} and euclidian norm}
+    \begin{frame}{\textsc{PD-distance} et norme euclidienne}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=1.0\textwidth]{img/euclide\n.pdf}
@@ -439,7 +437,7 @@
     \end{frame}
     }
 
-    \begin{frame}{\textbf{Sources election} | \textsc{K-means}}
+    \begin{frame}{\textsc{K-means}}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=0.85\textwidth]{img/clustering.pdf}
@@ -448,7 +446,7 @@
     \end{frame}
 
     \foreach \n in {0}{
-    \begin{frame}{\textbf{Sources election} | \textsc{K-means}}
+    \begin{frame}{\textsc{K-means}}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=0.85\textwidth]{img/kmeans\n.pdf}
@@ -456,7 +454,7 @@
         \end{figure}
     \end{frame}
     }
-    \begin{frame}{\textbf{Sources election} | \textsc{K-medoids}}
+    \begin{frame}{\textsc{K-medoids}}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=0.85\textwidth]{img/clustering.pdf}
@@ -464,7 +462,7 @@
         \end{figure}
     \end{frame}
 
-    \begin{frame}{\textbf{Sources election} | \textsc{K-medoids}}
+    \begin{frame}{\textsc{K-medoids}}
         \begin{figure}
             \begin{center}
                 \includegraphics[width=0.85\textwidth]{img/kmedoids.pdf}
@@ -472,42 +470,42 @@
         \end{figure}
     \end{frame}
 
-    \begin{frame}{\textbf{Adaptation experiments} | simulated users}
+    \begin{frame}{Expériences | bots}
         \begin{figure}
             \captionsetup[subfigure]{labelformat=empty}
             \begin{center}
-                \subfloat[Overall score ]{
+                \subfloat[Score]{
                 \includegraphics[width=0.33\textwidth]{img/handcraftedScores.pdf}
                 }
                 \subfloat[Longueur du dialogue]{
                 \includegraphics[width=0.33\textwidth]{img/handcraftedDialoguesize.pdf}
                 }
-                \subfloat[Task completion]{
+                \subfloat[Réussite de la tâche]{
                 \includegraphics[width=0.33\textwidth]{img/handcraftedTC.pdf}
                 }
             \end{center}
         \end{figure}
     \end{frame}
 
-    \begin{frame}{\textbf{Adaptation experiments} | human-model users}
+    \begin{frame}{Expérience | modèles d'humains}
         \begin{figure}
             \captionsetup[subfigure]{labelformat=empty}
             \begin{center}
-                \subfloat[Overall score ]{
+                \subfloat[Score ]{
                 \includegraphics[width=0.33\textwidth]{img/humanScores.pdf}
                 }
                 \subfloat[Longueur du dialogue]{
                 \includegraphics[width=0.33\textwidth]{img/humanDialoguesize.pdf}
                 }
 
-                \subfloat[Task completion]{
+                \subfloat[Réussite de la tâche]{
                 \includegraphics[width=0.33\textwidth]{img/humanTC.pdf}
                 }
             \end{center}
         \end{figure}
     \end{frame}
 
-    \begin{frame}{\textbf{Cross comparison} | human-model users}
+    \begin{frame}{\textbf{Comparaison croisée} | modèles d'humains}
         \begin{figure}
             \begin{center}
                 \begin{tabular}{|l|c|c|c|c|c|}
@@ -525,7 +523,7 @@
     \end{frame}
 
 
-    \begin{frame}{\textbf{Cross comparison} | simulated users}
+    \begin{frame}{\textbf{Comparaison croisée} | bots}
         \begin{figure}
             \begin{center}
                 \setlength{\tabcolsep}{0.15em}
@@ -572,7 +570,7 @@
 
     \subsection{Transfert continu}
 
-    \foreach \n in {0,1,2,3,4,5,6,7,8,9,10,11}{
+    \foreach \n in {0,1,2,3,4,5,6,7,8,9,10}{
     \begin{frame}{TDQN}
 
         %\todo{overlay "won't work"}
@@ -600,7 +598,7 @@
 
     \section{Apprentissage par transfert sécurisé}
 
-    \subsection{epsilon safe}
+    \subsection{$\epsilon$-safe}
 
     \begin{frame}
         On rajoute une info supplementaire (safety): %lié intimement à la reception du signal de reward:
@@ -639,8 +637,8 @@
         \begin{block}{Apprentissage}
             \begin{itemize}
                 \item FTQ avec $R \leftarrow R + \lambda C$
-                \item Safe: $\lambda = 1000$
-                \item Unsafe: $\lambda = 0$ (baseline)
+                \item Sécurisé: $\lambda = 1000$
+                \item Non sécurisé: $\lambda = 0$ (baseline)
             \end{itemize}
         \end{block}
 
@@ -728,12 +726,12 @@
 
     \end{frame}
 
-    \begin{frame}{Setting}
+    \begin{frame}{Cadre}
         \begin{block}{Markov Decision Process}
             \begin{itemize}
                 \pause\item $(\cS, \cA, P, R_r, \gamma)$
-                \pause\item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ the $\gamma$-discounted return of rewards.
-                \pause\item Find $\pi^*$ s.t $\forall s\in\cS$:
+                \pause\item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ le retour des récompenses.
+                \pause\item Trouver $\pi^*$ t.q $\forall s\in\cS$:
                 \begin{equation}
                     \label{eq:mdp}
                     \begin{array}{lcr}
@@ -755,14 +753,14 @@
 
     \end{frame}
 
-    \begin{frame}{Setting}
+    \begin{frame}{Cadre}
 
         \begin{block}{\textcolor{blue}{Constrained} Markov Decision Process}
             \begin{itemize}
                 \item $(\cS, \cA, P, R_r,\textcolor{blue}{R_c}, \gamma,\textcolor{blue}{\beta})$
-                \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ the $\gamma$-discounted return of rewards.
-                \item \textcolor{blue}{ $G_c^\pi = \sum_{t=0}^\infty \gamma^t R_c(s_t, a_t)$ the $\gamma$-discounted return of costs.}
-                \item Find $\pi^*$ s.t $\forall s\in\cS$:
+                \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ le retour des récompenses.
+                \item \textcolor{blue}{ $G_c^\pi = \sum_{t=0}^\infty \gamma^t R_c(s_t, a_t)$ le retour des coûts.}
+                \item Trouver $\pi^*$ t.q $\forall s\in\cS$:
                 \begin{equation}
                     \label{eq:cmdp}
                     \begin{array}{lcr}
@@ -791,9 +789,9 @@
         \begin{block}{\textcolor{blue}{Budgeted} Markov Decision Process}
             \begin{itemize}
                 \item $(\cS, \cA, P, R_r,{R_c}, \gamma,\textcolor{blue}{\cB})$
-                \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ the $\gamma$-discounted return of rewards.
-                \item  $G_c^\pi = \sum_{t=0}^\infty \gamma^t R_c(s_t, a_t)$ the $\gamma$-discounted return of costs.
-                \item Find $\pi^*$ s.t $\forall (s,\textcolor{blue}{\beta})\in\cS\times\textcolor{blue}{\cB}$:
+                \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ le retour des récompenses.
+                \item  $G_c^\pi = \sum_{t=0}^\infty \gamma^t R_c(s_t, a_t)$ le retour des coûts.
+                \item Trouver $\pi^*$ t.q $\forall (s,\textcolor{blue}{\beta})\in\cS\times\textcolor{blue}{\cB}$:
                 \begin{equation}
                     \label{eq:bmdp}
                     \begin{array}{lcr}
@@ -817,60 +815,59 @@
     \end{frame}
 
 
-    \begin{frame}{Augmented Settings}
+    \begin{frame}{Cadre augmenté}
 
-        \textbf{Budgeted policies} $\pi$
+        \textbf{Politique budgeté} $\pi$
         \begin{itemize}
             \pause\item $ \pi:\underbrace{(s,\beta)}_{\os} \rightarrow \underbrace{(a,\beta')}_{\oa}$
         \end{itemize}
 
         \textbf{Domain}
         \begin{itemize}
-            \pause\item States $\ocS = \cS\times\cB$.
+            \pause\item Etats $\ocS = \cS\times\cB$.
             \pause\item Actions $\ocA = \cA\times\cB$.
-            \pause\item Dynamics $\ov{P}$
+            \pause\item Dynamique $\ov{P}$
             %$\left((s',\beta') \condbar (s,\beta), (a, \beta_a)\right) \eqdef P(s'|s, a)\delta(\beta' - \beta_a)$.
         \end{itemize}
         \textbf{2D signals}
         \begin{enumerate}
-            \pause\item Rewards $R = (R_r, R_c)$
-            \pause\item Returns $G^\pi = (G_r^\pi, G_c^\pi)$
+            \pause\item Récompenses $R = (R_r, R_c)$
+            \pause\item Retours $G^\pi = (G_r^\pi, G_c^\pi)$
             \pause\item $V^\pi(\os) = (V_r^\pi, V_c^\pi) \eqdef \expectedvalue\left[ G^\pi \condbar \ov{s_0} = \os\right]$
             \pause\item $Q^\pi(\os, \oa)= (Q_r^\pi, Q_c^\pi) \eqdef \expectedvalue\left[ G^\pi \condbar \ov{s_0} = \os, \ov{a_0} = \oa\right]$
         \end{enumerate}
 
     \end{frame}
 
-    \begin{frame}{Augmented Optimality}
+    \begin{frame}{Optimalité}
         \begin{definition}
-            In that order, we want to:
             \begin{enumerate}
-                \item[(i)] \pause\colorbox{red}{Respect the budget $\beta$}:
+                \item[(i)] \pause\colorbox{red}{Respecter le budget $\beta$}:
                 \begin{equation*}
                     \Pi_a(\os) \eqdef \{\pi\in\Pi: V_c^\pi(s, \beta) \mathcolorbox{red}{\leq \beta}\}
                 \end{equation*}
-                \item[(ii)] \pause\colorbox{green}{Maximise the rewards}:
+                \item[(ii)] \pause\colorbox{green}{Maximiser les récompenses}:
                 \begin{equation*}
                     V_r^*(\os) \eqdef \mathcolorbox{green}{\max}_{\pi\in\Pi_a(\os)}  V_r^\pi(\os) \qquad\quad \Pi_r(\os) \eqdef \mathcolorbox{green}{\argmax}_{\pi\in\Pi_a(\os)}  V_r^\pi(\os)
                 \end{equation*}
-                \item[(iii)] \pause\colorbox{yellow}{Minimise the costs}:
+                \item[(iii)] \pause\colorbox{yellow}{Minimiser les coûts}:
                 \begin{equation*}
                     V_c^*(\os) \eqdef \mathcolorbox{yellow}{\min}_{\pi\in\Pi_r(\os)}  V_c^\pi(\os), \qquad\quad \Pi^*(\os) \eqdef \mathcolorbox{yellow}{\argmin}_{\pi\in\Pi_r(\os)}  V_c^\pi(\os)
                 \end{equation*}
             \end{enumerate}
 
-            \pause We define the budgeted action-value function $Q^*$ similarly
+            \pause On défini $Q^*$ de la même façon.
         \end{definition}
     \end{frame}
 
-    \begin{frame}{Budgeted Bellman Optimality Equation}
-        \begin{theorem}[Budgeted Bellman Optimality Equation]
-            $Q^*$ verifies the following equation:
+    \begin{frame}{Equation d'optimalité de Bellman}
+        \begin{theorem}[Equation d'optimalité de Bellman]
+            $Q^*$ vérifie:
             \begin{align*}
                 Q^{*}(\os, \oa) &= \cT Q^{*}(\os, \oa)\\
                 &\eqdef R(\os, \oa) + \gamma \sum_{\os'\in\ocS} \ov{P}(\ov{s'} | \os, \oa)\sum_{\ov{a'}\in \ocA} \pi_\text{greedy}(\ov{a'}|\ov{s'}; Q^*) Q^{*}(\ov{s'}, \ov{a'}),
             \end{align*}
-            where the greedy policy $\pi_\text{greedy}$ is defined by:
+           où la politique goultonne $\pi_\text{greedy}$ est définie comme suit:
             \begin{align*}
                 \pi_\text{greedy}(\cdot|\os; Q) \in &\mathcolorbox{yellow}{\argmin}_{\rho\in\Pi_r^Q} \expectedvalueover{\oa\sim\rho}Q_c(\os, \oa), \\
                 \text{where }\quad \Pi_r^Q \eqdef &\mathcolorbox{green}{\argmax}_{\rho\in\cM(\ocA)} \expectedvalueover{\oa\sim\rho} Q_r(\os, \oa) \\
@@ -907,15 +904,15 @@
         \begin{block}{Budgeted Value-Iteration}
             \begin{itemize}
                 \item $Q \leftarrow \mathbf{0}$
-                \item $Q(\os,\oa) \leftarrow \bo Q(\os,\oa)\ \forall (\os,\oa)$ until convergence (which might not happen)
+                \item $Q(\os,\oa) \leftarrow \bo Q(\os,\oa)\ \forall (\os,\oa)$ jusqu'à convergence % peut ne pas arriver
                 \item Return $\pi(\os) = \pi_\text{greedy}(\cdot|\os; Q)$
             \end{itemize}
         \end{block}
 
         \begin{alertblock}{}
             \begin{itemize}
-                \item How to compute $\bo Q$ if $\transition$, $\reward$ and $\constraint$ are unknown?
-                \item How to compute $Q \forall (\os,\oa) \in \ocS\times\ocA$ if $\ocS$ is continous or very large ?
+                \item Comment calculer $\bo Q$ si $\transition$, $\reward$ et $\constraint$ sont inconnues?
+                \item Comment calculer $Q \forall (\os,\oa) \in \ocS\times\ocA$ si $\ocS$ est très grand voir continu ?
             \end{itemize}
 
         \end{alertblock}
@@ -929,21 +926,21 @@
         \end{block}
     \end{frame}
 
-    \begin{frame}{Experiments}
+    \begin{frame}{Expériences}
         \begin{center}
             \includegraphics[width=0.75\textwidth]{img/slot-filling.pdf}
         \end{center}
     \end{frame}
 
-    \begin{frame}{Risk-sensitive exploration}
+    \begin{frame}{Exploration Risk-sensitive}
 
-        How to collect the batch $\cD$?
+       Comment construire $\cD$?
 
         \begin{itemize}
-            \item We propose an $\epsilon$-greedy exploration procedure
+            \item On propose une procédure d'exploration $\epsilon$-greedy
             \begin{itemize}
-                \pause\item Sample an initial budget $\beta_0$
-                \pause\item At each step, where $\os=(s,\beta)$ only explore feasible budgets:
+                \pause\item Choisir aléatoirement un budget initial $\beta_0$
+                \pause\item A chaque étape, où $\os=(s,\beta)$ explore seulement les budgets admissible:
                 \pause\begin{align*}
                           &\oa = (a, \beta_a)\sim\mathcal{U}(\Delta_{\cA\cB})\\
                           &\text{ where }  \Delta \text{ is such that }\probability{a, \beta_a|s, \beta} \text{verifies} \expectedvalue[\beta_a]\leq\beta
@@ -954,7 +951,7 @@
 
     \end{frame}
 
-    \begin{frame}{Experiments: 2D world}
+    \begin{frame}{Expérience: monde 2D}
         \begin{center}
             \includegraphics[page=1, width=0.75\textwidth]{img/corridors}
         \end{center}
