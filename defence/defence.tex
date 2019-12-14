@@ -77,6 +77,9 @@
 
 \beamertemplatenavigationsymbolsempty
 
+\newcommand{\cplus}{\colorbox{green}{(+)} }
+\newcommand{\cmoins}{\colorbox{red}{(-)} }
+
 \begin{document}
 
     \begin{frame}
@@ -311,8 +314,8 @@
 
 
         \begin{itemize}
-            \item (-) Amasser des transitions et apprendre en ligne (\textit{from scratch})
-            \item (+) Mise à profit de notre expérience avec d'autres utilisateurs
+            \item \cmoins Amasser des transitions et apprendre en ligne (\textit{from scratch})
+            \item \cplus Mise à profit de notre expérience avec d'autres utilisateurs
             \begin{itemize}
                 \item Apprentissage par transfert
             \end{itemize}
@@ -327,7 +330,7 @@
 
         \begin{figure}
             \begin{center}
-                \subfloat[Performance \textit{jumpstart}]{
+                \subfloat[Performance au démarrage]{
                 \includegraphics[width=0.33\textwidth]{../sources/dm-tl/objectives-jumpstart}
                 \label{fig:objectives-jumpstart}
                 }
@@ -491,13 +494,12 @@
         \begin{figure}
             \captionsetup[subfigure]{labelformat=empty}
             \begin{center}
-                \subfloat[Score ]{
+                \subfloat[Score]{
                 \includegraphics[width=0.33\textwidth]{img/humanScores.pdf}
                 }
                 \subfloat[Longueur du dialogue]{
                 \includegraphics[width=0.33\textwidth]{img/humanDialoguesize.pdf}
                 }
-
                 \subfloat[Réussite de la tâche]{
                 \includegraphics[width=0.33\textwidth]{img/humanTC.pdf}
                 }
@@ -547,21 +549,21 @@
 
     \begin{frame}
         \begin{itemize}
-            \item (+) la solution fonctionne (en HDC)
+            \item \cplus la solution fonctionne (en HDC)
             \item (.) heavily engineered
             \begin{itemize}
-                \item (+) chaque composant peut être testé et validé
-                \item (-) chaque composant générère des approximations et erreurs.
-                \item (-) formulation complexe
-                \item (-) meta paramètres
+                \item \cplus chaque composant peut être testé et validé
+                \item \cmoins chaque composant générère des approximations et erreurs.
+                \item \cmoins effort de développement important
+                \item \cmoins meta paramètres
             \end{itemize}
         \end{itemize}
 
         Et si on pouvait:
         \begin{itemize}
-            \item (+) une solution scalable naturellement
-            \item (+) embarqué directement dans un algorithm "low level"
-            \item (+) avec une formulation simple.
+            \item \cplus une solution scalable naturellement
+            \item \cplus embarqué directement dans un algorithm "low level"
+            \item \cplus avec une formulation simple.
             \item $\rightarrow$ Solution: Transfer Deep Q-Learning (TDQN)
         \end{itemize}
 
@@ -603,8 +605,8 @@
     \begin{frame}
         On rajoute une info supplementaire (safety): %lié intimement à la reception du signal de reward:
         \begin{itemize}
-            \item (+) peut donc guider l'apprentissage (safe $\rightarrow$ reward)
-            \item (+) d'une manière plus meta, eviter les dialogues trop catastrophiques pour eviter les dropouts.
+            \item \cplus peut donc guider l'apprentissage (safe $\rightarrow$ reward)
+            \item \cplus d'une manière plus meta, eviter les dialogues trop catastrophiques pour eviter les dropouts.
         \end{itemize}
 
     \end{frame}
@@ -665,8 +667,8 @@
     %
     %        \begin{block}{Resultats}
     %            \begin{itemize}
-    %                \item (+) Dialogues très légérement plus sûr. % on garde donc l'user
-    %                \item (-) mais cela n'affecte pas le score
+    %                \item \cplus Dialogues très légérement plus sûr. % on garde donc l'user
+    %                \item \cmoins mais cela n'affecte pas le score
     %                % et donc La vitesse d'apprentissage.
     %            \end{itemize}
     %        \end{block}
@@ -701,8 +703,8 @@
     \begin{frame}
         \begin{alertblock}{Limitations}
             \begin{itemize}
-                \item (-) processus lourd et approximatif % où commencer, quel steps ?
-                \item (-) il se peut qu'il n'existe même pas de lambda
+                \item \cmoins processus lourd et approximatif % où commencer, quel steps ?
+                \item \cmoins il se peut qu'il n'existe même pas de lambda
                 % pas de formulation linéaire de la reward pour un budget donné
             \end{itemize}
         \end{alertblock}
@@ -727,7 +729,7 @@
     \end{frame}
 
     \begin{frame}{Cadre}
-        \begin{block}{Markov Decision Process}
+        \begin{block}{Processus de Decision Markovien (MDP)}
             \begin{itemize}
                 \pause\item $(\cS, \cA, P, R_r, \gamma)$
                 \pause\item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ le retour des récompenses.
@@ -745,8 +747,8 @@
 
         \begin{block}{}
             \begin{itemize}
-                \item \colorbox{green}{(+) \textit{Tractable}}
-                \item \colorbox{red}{(-) Calibration nécessaire (quel $\lambda$ ?)}
+                \item \cplus \textit{Tractable}
+                \item \cmoins Calibration nécessaire (quel $\lambda$ ?)
                 % A l ORAL si formulation sous contrainte
             \end{itemize}
         \end{block}
@@ -755,7 +757,7 @@
 
     \begin{frame}{Cadre}
 
-        \begin{block}{\textcolor{blue}{Constrained} Markov Decision Process}
+        \begin{block}{Processus de Decision Markovien \textcolor{blue}{sous Contrainte} (CMDP)}
             \begin{itemize}
                 \item $(\cS, \cA, P, R_r,\textcolor{blue}{R_c}, \gamma,\textcolor{blue}{\beta})$
                 \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ le retour des récompenses.
@@ -773,9 +775,9 @@
 
         \begin{block}{}
             \begin{itemize}
-                \item \colorbox{green}{(+) \textit{Tractable}}
-                \item \colorbox{green}{(+) DOF supplémentaire}% A L ORAL On peut définir un budget de safety , formuation plus naturelle
-                \item \colorbox{red}{(-) Calibration nécessaire (budget fixé)}
+                \item \cplus \textit{Tractable}
+                \item \cplus DOF supplémentaire % A L ORAL On peut définir un budget de safety , formuation plus naturelle
+                \item \cmoins Calibration nécessaire (budget fixé)
                 % A L ORAL si le budget change on the fly, ou qu'il n'est pas adapté, on doit reapprendre une politique,  Or Le front de pareto est rarement linéaire, le choix du budget n'est pas évident
 
 
@@ -784,9 +786,9 @@
 
     \end{frame}
 
-    \begin{frame}{Setting}
+    \begin{frame}{Cadre}
 
-        \begin{block}{\textcolor{blue}{Budgeted} Markov Decision Process}
+        \begin{block}{Processus de Decision Markovien \textcolor{blue}{Budgeté} (BMDP)}
             \begin{itemize}
                 \item $(\cS, \cA, P, R_r,{R_c}, \gamma,\textcolor{blue}{\cB})$
                 \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R_r(s_t, a_t)$ le retour des récompenses.
@@ -805,9 +807,10 @@
 
         \begin{block}{}
             \begin{itemize}
-                \item \colorbox{red}{(-) \textit{Non Tractable}}
-                \item \colorbox{green}{(+) Pas besoin de calibration, le budget est un paramètre de la politique}
-                \item \colorbox{green}{(+) DOF supplémentaire}
+                \item \cmoins \textit{Non Tractable}
+                \item \cplus DOF supplémentaire
+                \item \cplus Pas besoin de calibration, le budget est un paramètre de la politique
+
                 % A L ORAL On peut définir un budget de safety et d'afranchir des lambda.}
             \end{itemize}
         \end{block}
