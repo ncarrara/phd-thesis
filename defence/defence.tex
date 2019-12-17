@@ -585,20 +585,12 @@
 
 
     \subsection{Transfert continu}
-
-    \foreach \n in {0,1,2,3,4,5,6,7,8,9,10}{
     \begin{frame}{TDQN}
-
-        %\todo{overlay "won't work"}
-        \begin{figure}
-            \begin{center}
-                \includegraphics[width=1\textwidth]{drawio/out/tdqn\n.pdf}
-            \end{center}
-        \end{figure}
+        Pas abordé dans cette présentation.
     \end{frame}
-    }
 
-    \subsection{}
+    \section{Apprentissage par transfert sécurisé}
+
 
     \begin{frame}
         Lors de l'adoption d'un nouveau système, l'utilisateur est plus suceptible d'abandonner rapidement.
@@ -614,89 +606,16 @@
 
     \end{frame}
 
-    \section{Apprentissage par transfert sécurisé}
 
-    \subsection{$\epsilon$-safe}
 
-    \begin{frame}
-        On rajoute une info supplementaire (safety): %lié intimement à la reception du signal de reward:
-        \begin{itemize}
-            \item \cplus peut donc guider l'apprentissage (safe $\rightarrow$ reward)
-            \item \cplus d'une manière plus meta, eviter les dialogues trop catastrophiques pour eviter les dropouts.
-        \end{itemize}
-
-    \end{frame}
+    \subsection{Maîtrise du risque en RL}
 
     \begin{frame}
 
-        \begin{figure}
-            \begin{center}
-                \includegraphics[width=0.5\textwidth]{img/transfer7.pdf}
-            \end{center}
-        \end{figure}
-
-    \end{frame}
-
-    \begin{frame}{Expériences}
-
-        \begin{block}{Environnement}
-            \begin{itemize}
-                \item \texttt{ask-next}%: ask next slot (with ASR errors).
-                \item \texttt{repeat-oral} (safe + ASR errors)%: repeat current slot (with ASR errors).
-                \item \texttt{repeat-numpad} (unsafe)%: repeat current slot using numeric pad (without ASR errors).
-                \item \texttt{summarize-inform}
-                %: summarise slots values and return the form result. If values are correct, the dialogue ends successfully, if not, the slot values are reset and the dialogue continues from the first slot.
-            \end{itemize}
-
-            Raccrochage: $C: \cS\times\cA \rightarrow \{0,1\}$
-
-        \end{block}
-
-        \begin{block}{Apprentissage}
-            \begin{itemize}
-                \item FTQ avec $R \leftarrow R + \lambda C$
-                \item Sécurisé: $\lambda = 1000$
-                \item Non sécurisé: $\lambda = 0$ (baseline)
-            \end{itemize}
-        \end{block}
-
-
-    \end{frame}
-
-    \begin{frame}{Expériences}
-
-        \begin{figure}
-            \captionsetup[subfigure]{labelformat=empty}
-            \begin{center}
-                \subfloat[Score du dialogue]{
-                \includegraphics[width=0.5\textwidth]{img/retgreed.png}
-                }
-                \subfloat[Dialogue arrive à terme]{
-                \includegraphics[width=0.5\textwidth]{img/rewgreed.png}
-                }
-            \end{center}
-        \end{figure}
-
-
-    \end{frame}
-    %    \begin{frame}{Expériences}
-    %
-    %        \begin{block}{Resultats}
-    %            \begin{itemize}
-    %                \item \cplus Dialogues très légérement plus sûr. % on garde donc l'user
-    %                \item \cmoins mais cela n'affecte pas le score
-    %                % et donc La vitesse d'apprentissage.
-    %            \end{itemize}
-    %        \end{block}
-    %
-    %    \end{frame}
-    \begin{frame}
-
-        On a utilisé une politique lagragienne pour généré des dialogue safe.
+        Utiliser de la relaxation lagragienne.
 
         \begin{alertblock}{Limitation}
             La formulation linéaire de la reward implique des comportements extreme de $\pi_{safe}$: trop safe/trop risky.
-            % , Il est donc possible que les comportements soient les mêmes avec ou sans signal de safety. Donc ça revient a avoir deux politiques greedy (ou lieu d'une safe+greedy)
         \end{alertblock}
 
         \begin{block}{Solution: calibration de lambda}% oral: limitation des politiques lagragiennes
@@ -720,7 +639,7 @@
         \begin{alertblock}{Limitations}
             \begin{itemize}
                 \item \cmoins processus lourd et approximatif % où commencer, quel steps ?
-                \item \cmoins il se peut qu'il n'existe même pas de lambda
+                \item \cmoins il se peut qu'il n'existe pas de lambda
                 % pas de formulation linéaire de la reward pour un budget donné
             \end{itemize}
         \end{alertblock}
@@ -730,19 +649,6 @@
         \end{exampleblock}
     \end{frame}
 
-    \subsection{Maîtrise du risque en RL}
-
-    \begin{frame}{Une formulation plus directe}
-
-        \begin{itemize}
-            \item Amasser des échanges sans perdre l'utilisateur% Ce qui nous interesse en réalité, c'est d'amasser des données personalisées sans perdre l'utilisateur.
-            \item Utilisation d'une politique sécurisée % On propose d'utiliser une politique safe généralisée dès les premiers dialogues.
-            \item Formulation linéaire de la reward insuffisante
-            % Peut t on se contenter d'une politique lagragienne ? Non
-        \end{itemize}
-
-
-    \end{frame}
 
     \begin{frame}{Cadre}
         \begin{block}{Processus de Decision Markovien (MDP)}
@@ -880,19 +786,19 @@
     \end{frame}
 
     \begin{frame}{Equation d'optimalité de Bellman}
-        \begin{theorem}[Equation d'optimalité de Bellman]
+        \begin{block}{Equation d'optimalité de Bellman}
             $Q^*$ vérifie:
             \begin{align*}
                 Q^{*}(\os, \oa) &= \cT Q^{*}(\os, \oa)\\
                 &\eqdef R(\os, \oa) + \gamma \sum_{\os'\in\ocS} \ov{P}(\ov{s'} | \os, \oa)\sum_{\ov{a'}\in \ocA} \pi_\text{greedy}(\ov{a'}|\ov{s'}; Q^*) Q^{*}(\ov{s'}, \ov{a'}),
             \end{align*}
-            où la politique goultonne $\pi_\text{greedy}$ est définie comme suit:
+            avec:
             \begin{align*}
                 \pi_\text{greedy}(\cdot|\os; Q) \in &\mathcolorbox{yellow}{\argmin}_{\rho\in\Pi_r^Q} \expectedvalueover{\oa\sim\rho}Q_c(\os, \oa), \\
                 \text{where }\quad \Pi_r^Q \eqdef &\mathcolorbox{green}{\argmax}_{\rho\in\cM(\ocA)} \expectedvalueover{\oa\sim\rho} Q_r(\os, \oa) \\
                 & \text{ s.t. }  \expectedvalueover{\oa\sim\rho} Q_c(\os, \oa) \mathcolorbox{red}{\leq \beta}
             \end{align*}
-        \end{theorem}
+        \end{block}
         % ORAL: comment résoudre ce problème ?
     \end{frame}
 
@@ -910,8 +816,8 @@
     \begin{frame}{Comportement asymptotique}
 
         \begin{itemize}
-            \item \colorbox{red}{$\cT$ n'est pas une contraction}
-            \item \colorbox{green}{sauf quand les $Q$-fonctions sont lisses ie:}
+            \item \cmoins $\cT$ n'est pas une contraction,
+            \item \cplus sauf quand les $Q$-fonctions sont lisses ie:
             \begin{itemize}
                 \item "$Q_r$ est $L$-Lipschitz par rapport à $Q_c$", avec $L<\frac{1}{\gamma}-1$
             \end{itemize}
@@ -931,7 +837,13 @@
         \begin{alertblock}{}
             \begin{itemize}
                 \item Comment calculer $\bo Q$ si $\transition$, $\reward$ et $\constraint$ sont inconnues?
-                \item Comment calculer $Q \forall (\os,\oa) \in \ocS\times\ocA$ si $\ocS$ est très grand voir continu ?
+                \begin{itemize}
+                    \item Estimateur avec $\{(\os_i,\oa_i,\ov{r}_i',\os_i')\}_{i\in[0,N]}$
+                \end{itemize}
+                \item Comment calculer $Q\ \forall (\os,\oa) \in \ocS\times\ocA$ si $\ocS$ est très grand voir continu ?
+                \begin{itemize}
+                    \item Approximation de fonction
+                \end{itemize}
             \end{itemize}
 
         \end{alertblock}
@@ -939,9 +851,25 @@
         \begin{block}{Budgeted Fitted-Q}
             \begin{itemize}
                 \item $Q \leftarrow \mathbf{0}$
-                \item $Q \leftarrow \Gamma(\{\os_{\indextransition},\oa_{\indextransition}\}_{{\indextransition}\in \T},\{r'_{\indextransition} + \gamma \sum_{\ov{a}'\in \cA} \pi_\text{greedy}(\ov{a}'|\ov{s}'_{\indextransition}; Q) Q(\ov{s}'_{\indextransition}, \ov{a}')_{{\indextransition} \in \T})$
+                \item $Q \leftarrow \Gamma(\{\os_{\indextransition},\oa_{\indextransition}\}_{{\indextransition}\in \T},\{\ov{r}'_{\indextransition} + \gamma \sum_{\ov{a}'\in \cA} \pi_\text{greedy}(\ov{a}'|\ov{s}'_{\indextransition}; Q) Q(\ov{s}'_{\indextransition}, \ov{a}')_{{\indextransition} \in \T})$
                 \item Return $\pi(\os) = \pi_\text{greedy}(\cdot|\os; Q)$
             \end{itemize}
+        \end{block}
+    \end{frame}
+
+    \begin{frame}{Expériences}
+
+        \begin{block}{Environnement}
+            \begin{itemize}
+                \item \texttt{ask-next}%: ask next slot (with ASR errors).
+                \item \texttt{repeat-oral} (safe + ASR errors)%: repeat current slot (with ASR errors).
+                \item \texttt{repeat-numpad} (unsafe)%: repeat current slot using numeric pad (without ASR errors).
+                \item \texttt{summarize-inform}
+                %: summarise slots values and return the form result. If values are correct, the dialogue ends successfully, if not, the slot values are reset and the dialogue continues from the first slot.
+            \end{itemize}
+
+            Raccrochage: $C: \cS\times\cA \rightarrow \{0,1\}$
+
         \end{block}
     \end{frame}
 
@@ -955,29 +883,29 @@
 
         Comment construire $\cD$?
 
+        \begin{exampleblock}{Solution}
+            Exploration avec Risk-sensitive $\epsilon$-greedy
+        \end{exampleblock}
+            $\rightarrow$ Pas abordée dans cette présenation
+    \end{frame}
+
+    \begin{frame}
+
         \begin{itemize}
-            \item On propose une procédure d'exploration $\epsilon$-greedy
-            \begin{itemize}
-                \pause\item Choisir aléatoirement un budget initial $\beta_0$
-                \pause\item A chaque étape, où $\os=(s,\beta)$ explore seulement les budgets admissible:
-                \pause\begin{align*}
-                          &\oa = (a, \beta_a)\sim\mathcal{U}(\Delta_{\cA\cB})\\
-                          &\text{ where }  \Delta \text{ is such that }\probability{a, \beta_a|s, \beta} \text{verifies} \expectedvalue[\beta_a]\leq\beta
-                \end{align*}
-            \end{itemize}
+            \item Les récompenses en dialogue sont très \textit{sparse}.
+            \item Et si on utilisait une politique sécurisée pour découvrir plus de récompenses?
         \end{itemize}
 
-
+        \begin{exampleblock}{Solution}
+            Transfert avec $\epsilon$- safe
+        \end{exampleblock}
+    \end{frame}
+    \subsection{$\epsilon$-safe}
+    \begin{frame}{$\epsilon$- safe}
+        Pas abordé dans cette présentation.
     \end{frame}
 
-    \begin{frame}{Expérience: monde 2D}
-        \begin{center}
-            \includegraphics[page=1, width=0.75\textwidth]{img/corridors}
-        \end{center}
-    \end{frame}
-
-    \section{}
-    \subsection{}
+    \section{Conclusion et perspectives}
     \begin{frame}{Conclusion}
         \begin{itemize}
             \item Prise de décision dans un SDS = le gestionnaire de dialogue
@@ -991,12 +919,12 @@
                 \item Mise à l'échelle de solutions existantes
                 \begin{itemize}
                     \item PD-distance: Clustering de politiques
-                    \item TDQN: Solution de transfert en continu avec DQN
+                    \item TDQN: Solution de transfert en continu avec DQN (pas abordé ici)
                 \end{itemize}
                 \item Approche sécurisée:
                 \begin{itemize}
-                    \item $\epsilon$-safe, formulation lagragienne insuffisante
-                    \item $BRL$
+                    \item formulation lagragienne insuffisante $\rightarrow$ Budgeted-RL
+                    \item $\epsilon$-safe (pas abordé ici)
                 \end{itemize}
             \end{itemize}
         \end{itemize}
