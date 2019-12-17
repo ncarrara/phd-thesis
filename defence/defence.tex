@@ -112,6 +112,19 @@
 
     \end{frame}
 
+    \begin{frame}{Qu'est ce qu'une tâche?}
+
+        Le système doit remplir un formulaire pour répondre à une réquête.\\
+
+        \begin{block}{Exemple: reservation de restaurants.}
+            \begin{itemize}
+                \item \textit{informable}: localisation, fourchette de prix ...
+                \item \textit{requestable}: \textit{informable}+ l'adresse exacte du restaurant, le numéro de téléphone ...
+            \end{itemize}
+        \end{block}
+
+    \end{frame}
+
     \begin{frame}{\textbf{Systèmes de dialogue} | sans adaptation}
         \begin{figure}
             \begin{center}
@@ -149,16 +162,16 @@
         On pourrait discriminer deux types de personalisations
 
         \begin{itemize}
-            \item Adaptation aux habitudes de la personne.
-            % les rdv sont plutot le dimanche, le medecin s'appelle X, la personne habide dans un coin avec certains restaurant
-            \item \textbf{Adaptation au type de personne.}
+            \item Adaptation aux données de la personne.
+            %  le medecin s'appelle X, la personne habide dans un coin avec certains restaurant
+            \item \textbf{Adaptation au type/habitude de la personne.}
             % personne agée, enfant, dyslesique, culture (red good chine, red wrong europe) etc
         \end{itemize}
 
         %C'est surtout la deuxième problématique qui nous interesse.
 
         \begin{alertblock}{Problématique}
-            Comment s'adapter sans a priori? Utiliser l'apprentissage par transfert.
+            Comment s'adapter rapidement? Utiliser l'apprentissage par transfert.
             % mais tout d'abord qu'est ce qu'un système de dialogue
         \end{alertblock}
 
@@ -172,18 +185,7 @@
     \subsection{Une architecture modulaire}
 
 
-    \begin{frame}{Le Slot-Filling}
 
-        Le système doit remplir un formulaire (\textit{informable}) pour répondre à une réquête (\textit{requestable}).\\
-
-        \begin{block}{Exemple: reservation de restaurants.}
-        \begin{itemize}
-            \item \textit{informable}: localisation, fourchette de prix ...
-            \item \textit{requestable}: \textit{informable}+ l'adresse exacte du restaurant, le numéro de téléphone ...
-        \end{itemize}
-        \end{block}
-
-    \end{frame}
 
     \foreach \n in {1,2,3,4,5,6,7}{
     \begin{frame}{Le processus}
@@ -227,10 +229,10 @@
 
         \begin{block}{Actes de dialogues}
             \begin{itemize}
-            \item \texttt{request}
-            \item \texttt{inform}
-            \item \texttt{repeat}
-            \item \texttt{explicit/implicit-confirmation}
+                \item \texttt{request}
+                \item \texttt{inform}
+                \item \texttt{repeat}
+                \item \texttt{explicit/implicit-confirmation}
             \end{itemize}
         \end{block}
 
