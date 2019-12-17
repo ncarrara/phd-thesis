@@ -38,19 +38,21 @@
 \end{frame}
 }
 }
-\AtBeginSubsection[]{
-{
-\begin{frame}
-    \vfill
-    \centering
-    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
-        \usebeamerfont{title}\insertsubsectionhead\par
-        %
-    \end{beamercolorbox}
-    \vfill
-\end{frame}
-}
-}
+
+
+%\AtBeginSubsection[]{
+%{
+%\begin{frame}
+%    \vfill
+%    \centering
+%    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+%        \usebeamerfont{title}\insertsubsectionhead\par
+%        %
+%    \end{beamercolorbox}
+%    \vfill
+%\end{frame}
+%}
+%}
 
 \addbibresource{../bibliography.bib} % BibTeX bibliography file
 \defbibheading{bibempty}{}
@@ -290,8 +292,14 @@
 
         \begin{alertblock}{}
             \begin{itemize}
-                \item Comment calculer $\bo Q$ si $\transition$ et $\reward$ sont inconnus?
-                \item Comment calculer $Q \forall (s,a) \in \cS\times\cA$ si $S$ est très grand voir continu ?
+                \item Comment calculer $\bo Q$ si $\transition$ et $\reward$ sont inconnues?
+                \begin{itemize}
+                    \item Estimateur avec $\{(s_i,a_i,r_i',s_i')\}_{i\in[0,N]}$
+                \end{itemize}
+                \item Comment calculer $Q\ \forall (s,a) \in \cS\times\cA$ si $S$ est très grand voir continu ?
+                \begin{itemize}
+                    \item Approximation de fonction
+                \end{itemize}
             \end{itemize}
 
         \end{alertblock}
@@ -352,6 +360,10 @@
     \end{frame}
 
     \begin{frame}{Les différentes formes de transfert}
+        \begin{itemize}
+            \item Utiliser une ou des tâches sources
+            \item Pour apprendre une ou des tâches cibles
+        \end{itemize}
 
 
         \begin{table}
@@ -594,7 +606,9 @@
             \begin{itemize}
                 \item On va apprendre une nouvelle strategie de dialogue,
                 \item tout en prenant soin de ne pas "brusquer" l'utilisateur
-                \begin{itemize}\item notion de \textit{safety}\end{itemize}
+                \begin{itemize}
+                    \item notion de \textit{safety}
+                \end{itemize}
             \end{itemize}
         \end{block}
 
@@ -872,7 +886,7 @@
                 Q^{*}(\os, \oa) &= \cT Q^{*}(\os, \oa)\\
                 &\eqdef R(\os, \oa) + \gamma \sum_{\os'\in\ocS} \ov{P}(\ov{s'} | \os, \oa)\sum_{\ov{a'}\in \ocA} \pi_\text{greedy}(\ov{a'}|\ov{s'}; Q^*) Q^{*}(\ov{s'}, \ov{a'}),
             \end{align*}
-           où la politique goultonne $\pi_\text{greedy}$ est définie comme suit:
+            où la politique goultonne $\pi_\text{greedy}$ est définie comme suit:
             \begin{align*}
                 \pi_\text{greedy}(\cdot|\os; Q) \in &\mathcolorbox{yellow}{\argmin}_{\rho\in\Pi_r^Q} \expectedvalueover{\oa\sim\rho}Q_c(\os, \oa), \\
                 \text{where }\quad \Pi_r^Q \eqdef &\mathcolorbox{green}{\argmax}_{\rho\in\cM(\ocA)} \expectedvalueover{\oa\sim\rho} Q_r(\os, \oa) \\
@@ -939,7 +953,7 @@
 
     \begin{frame}{Exploration Risk-sensitive}
 
-       Comment construire $\cD$?
+        Comment construire $\cD$?
 
         \begin{itemize}
             \item On propose une procédure d'exploration $\epsilon$-greedy
@@ -988,6 +1002,16 @@
         \end{itemize}
     \end{frame}
 
+    \begin{frame}{Perspectives}
+        \begin{itemize}
+            \item End-to-end (avec certaines limites)
+            \item Transfer/Meta-learning
+            \item Co-adaptation
+            \item Multi-agents
+            \item Nouvelles notions de sureté
+        \end{itemize}
+
+    \end{frame}
 
     %    \begin{frame}
     %        \printbibliography[heading=bibempty]
