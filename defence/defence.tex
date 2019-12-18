@@ -1,6 +1,6 @@
 \documentclass[french]{beamer}
 \usetheme[secheader]{Boadilla}
-\usecolortheme[named=orange]{structure}
+\usecolortheme[named=blue]{structure}
 \usepackage[utf8]{inputenc}
 \newcommand{\mathcolorbox}[2]{\colorbox{#1}{$\displaystyle #2$}}
 
@@ -21,24 +21,25 @@
 \usepackage[style=authoryear-icomp,maxbibnames=9,maxcitenames=2,uniquelist=false,
 backend=biber]{biblatex}
 \usepackage{diagbox}
+\usepackage{graphicx}
 %\usepackage[block=space,style=authoryear,citestyle=authoryear,sorting=nyt,sortcites=true,autopunct=true,autolang=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
 %\usepackage[backend=biber]{biblatex}
 \definecolor{macouleur}{rgb}{0.75,0.43,0.09}
-\AtBeginSection[]{
-{
-%\setbeamercolor{background canvas}{bg=macouleur}
-\begin{frame}
-    \vfill
-    \centering
-    \begin{beamercolorbox}[sep=15pt,center,shadow=true,rounded=true]{title}
-        %\usebeamerfont{title}\insertsectionhead\par
-        %\frametitle{Outline for section \thesection}
-        \tableofcontents[currentsection]
-    \end{beamercolorbox}
-    \vfill
-\end{frame}
-}
-}
+%\AtBeginSection[]{
+%{
+%%\setbeamercolor{background canvas}{bg=macouleur}
+%\begin{frame}
+%    \vfill
+%    \centering
+%    \begin{beamercolorbox}[sep=15pt,center,shadow=true,rounded=true]{title}
+%        %\usebeamerfont{title}\insertsectionhead\par
+%        %\frametitle{Outline for section \thesection}
+%        \tableofcontents[currentsection]
+%    \end{beamercolorbox}
+%    \vfill
+%\end{frame}
+%}
+%}
 
 
 %\AtBeginSubsection[]{
@@ -91,7 +92,21 @@ backend=biber]{biblatex}
     \begin{frame}
         \maketitle
         \centering
+        \resizebox{0.65\textwidth}{!}{
+        \begin{tabular}{l l l}
+
+            Pr. Philippe \textbf{Preux} & Université de Lille & Président du jury \\
+            Dr. Alain \textbf{Dutech} & INRIA & Rapporteur \\
+            Pr. Fabrice \textbf{Lefèvre} & Université d'Avignon & Rapporteur \\
+            Dr. Lina Maria \textbf{Rojas-Barahona}  & Orange Labs & Examinatrice \\
+            Pr. Olivier \textbf{Pietquin} & Université de Lille, Google Research & Directeur de thèse \\
+            Dr. Romain \textbf{Laroche} & Microsoft Research & Encadrant industriel \\
+            Dr. Tanguy \textbf{Urvoy}& Orange Labs & Encadrant industriel \\
+        \end{tabular}
+        }
+        \includegraphics[width=0.7\textwidth]{img/logos}
     \end{frame}
+
 
     \section{Introduction}
 
@@ -739,17 +754,17 @@ backend=biber]{biblatex}
 
     \begin{frame}{Cadre}
 
-        \begin{block}{Processus de Decision Markovien \textcolor{blue}{sous Contrainte} (CMDP)}
+        \begin{block}{Processus de Decision Markovien \textcolor{purple}{sous Contrainte} (CMDP)}
             \begin{itemize}
-                \item $(\cS, \cA, P, R,\textcolor{blue}{C}, \gamma,\textcolor{blue}{\beta})$
+                \item $(\cS, \cA, P, R,\textcolor{purple}{C}, \gamma,\textcolor{purple}{\beta})$
                 \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R(s_t, a_t)$ le retour des récompenses.
-                \item \textcolor{blue}{ $G_c^\pi = \sum_{t=0}^\infty \gamma^t C(s_t, a_t)$ le retour des coûts.}
+                \item \textcolor{purple}{ $G_c^\pi = \sum_{t=0}^\infty \gamma^t C(s_t, a_t)$ le retour des coûts.}
                 \item Trouver $\pi^*$ t.q $\forall s\in\cS$:
                 \begin{equation}
                     \label{eq:cmdp}
                     \begin{array}{lcr}
                         \displaystyle \pi^* \in \argmax_{\pi\in\cM(\cA)^\cS} \expectedvalue[G_r^\pi | s_0=s] \\
-                        \text{ s.t. }  \textcolor{blue}{\expectedvalue[G_c^\pi | s_0=s] \leq \beta}
+                        \text{ s.t. }  \textcolor{purple}{\expectedvalue[G_c^\pi | s_0=s] \leq \beta}
                     \end{array}
                 \end{equation}
             \end{itemize}
@@ -770,17 +785,17 @@ backend=biber]{biblatex}
 
     \begin{frame}{Cadre}
 
-        \begin{block}{Processus de Decision Markovien \textcolor{blue}{Budgeté} (BMDP)}
+        \begin{block}{Processus de Decision Markovien \textcolor{purple}{Budgeté} (BMDP)}
             \begin{itemize}
-                \item $(\cS, \cA, P, R,{C}, \gamma,\textcolor{blue}{\cB})$
+                \item $(\cS, \cA, P, R,{C}, \gamma,\textcolor{purple}{\cB})$
                 \item $G_r^\pi = \sum_{t=0}^\infty \gamma^t R(s_t, a_t)$ le retour des récompenses.
                 \item  $G_c^\pi = \sum_{t=0}^\infty \gamma^t C(s_t, a_t)$ le retour des coûts.
-                \item Trouver $\pi^*$ t.q $\forall (s,\textcolor{blue}{\beta})\in\cS\times\textcolor{blue}{\cB}$:
+                \item Trouver $\pi^*$ t.q $\forall (s,\textcolor{purple}{\beta})\in\cS\times\textcolor{purple}{\cB}$:
                 \begin{equation}
                     \label{eq:bmdp}
                     \begin{array}{lcr}
-                        \displaystyle \pi^* \in \argmax_{\pi\in\cM(\cA\times\textcolor{blue}{\cB})^{\cS\times\textcolor{blue}{\cB}}} \expectedvalue[G_r^\pi | s_0=s,\textcolor{blue}{\beta_0=\beta}] \\
-                        \text{ s.t. }  \expectedvalue[G_c^\pi | s_0=s,\textcolor{blue}{\beta_0=\beta}] \leq \beta
+                        \displaystyle \pi^* \in \argmax_{\pi\in\cM(\cA\times\textcolor{purple}{\cB})^{\cS\times\textcolor{purple}{\cB}}} \expectedvalue[G_r^\pi | s_0=s,\textcolor{purple}{\beta_0=\beta}] \\
+                        \text{ s.t. }  \expectedvalue[G_c^\pi | s_0=s,\textcolor{purple}{\beta_0=\beta}] \leq \beta
                     \end{array}
                 \end{equation}
             \end{itemize}
@@ -974,21 +989,25 @@ backend=biber]{biblatex}
 
     \section{Conclusion et perspectives}
     \begin{frame}{Conclusion}
+        \pause
         \begin{itemize}
             \item Prise de décision dans un SDS = le gestionnaire de dialogue
             \item Formulation avec du RL
+            \pause
             \item Comment s'adapater rapidement à un nouvel utilisateur ?
             \begin{itemize}
                 \item Apprentissage par transfert
             \end{itemize}
+            \pause
             \item Deux directions:
+            \pause
             \begin{itemize}
                 \item Mise à l'échelle de solutions existantes
                 \begin{itemize}
                     \item PD-distance: Clustering de politiques
                     \item TDQN: Solution de transfert en continu avec DQN (pas abordé ici)
                 \end{itemize}
-                \item Approche sécurisée:
+                \pause\item Approche sécurisée:
                 \begin{itemize}
                     \item formulation lagragienne insuffisante $\rightarrow$ Budgeted-RL
                     \item $\epsilon$-safe (pas abordé ici)
@@ -999,9 +1018,10 @@ backend=biber]{biblatex}
 
     \begin{frame}{Perspectives}
         \begin{itemize}
+            \item  Multi-agents
             \item Co-adaptation
-            \item Multi-agents
-%            \item Nouvelles notions de sureté % induction en erreur,
+
+            %            \item Nouvelles notions de sureté % induction en erreur,
         \end{itemize}
 
     \end{frame}
