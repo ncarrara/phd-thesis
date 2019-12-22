@@ -520,12 +520,12 @@ To reproduce the result displayed in \Cref{sec:experiements}, first install the 
     \begin{lstlisting}[language=bash,label={fig:instructions},title={Instructions to reproduce experiments},breaklines,captionpos=b]
         # Install highway-env
         pip3 install --user git+https://github.com/eleurent/rl-agents
-        # Change python path to the path of this repository
-        export PYTHONPATH="code/scaling-up-brl"
         # pull code
-        git clone https://github.com/scaling-up-brl/scaling-up-brl.github.io.git
+        git clone https://github.com/ncarrara/budgeted-rl.git
+        # Change python path to the path of this repository
+        export PYTHONPATH="budgeted-rl/ncarrara"
         # Navigate to budgeted-rl folder
-        cd scaling-up-brl.github.io/code/scaling-up-brl/budgeted-rl/
+        cd budgeted-rl/ncarrara/budgeted_rl
         # Run main script using any config file
         # Choose the range of seeds you want to test on
         python3 main/egreedy/main-egreedy.py config/slot-filling.json 0 6
