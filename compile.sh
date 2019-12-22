@@ -67,7 +67,7 @@ texfot pdflatex  main.tex
 clean
 
 
-#mv main.pdf thesis-nicolas-carrara.pdf
-#scp thesis-nicolas-carrara.pdf  ncarrara@ncarrara.fr:/home/ncarrara/website/public/others/thesis-nicolas-carrara.pdf
+mv main.pdf thesis-nicolas-carrara.pdf
+scp thesis-nicolas-carrara.pdf  ncarrara@ncarrara.fr:/home/ncarrara/website/public/others/thesis-nicolas-carrara.pdf
 
 

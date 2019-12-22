@@ -51,7 +51,7 @@ For task-oriented situation, if the task is completed, then the \idx{environment
     \end{center}
 \end{figure}
 %
-The state of an \gls{MDP} must contain all past observations. In other words, the \idx{agent} would not be able to take a better decision with additional past information to complete the dialogue task. We say that the process is stateless and respects the Markov property (or that it is \textit{Markovian}).
+The state of an \gls{MDP} must contain all past observations. In other words, the \idx{agent} would not be able to take a better decision with additional past information to complete the dialogue task. We say that the process respects the Markov property (or that it is \textit{Markovian}).
 \begin{definition}
     Let $(\Omega,\bbP)$  a probability space. Then a \idx{stochastic} process $X=\{X_{\indextransition}\}_{\indextransition\in\T}$ is said to possess the Markov property if
     \begin{equation}
@@ -71,7 +71,7 @@ The behaviour of the \idx{dialogue} \idx{agent}, the \gls{DP}, is then defined a
 \begin{definition}
     Let $\discountfactor \in [0,1[$, then the $\discountfactor$-discounted return for the policy $\policy$ is
     \begin{align}
-        &\return^{\policy} = \sum_{\indextransition=0}^\infty \discountfactor^{\indextransition} \return^{\indextransition} = \reward(s_{\indextransition},a_{\indextransition})\\
+        &\return^{\policy} = \sum_{\indextransition=0}^\infty \discountfactor^{\indextransition} \reward(s_{\indextransition},a_{\indextransition})\\
         & \text{where } s_{\indextransition+1} \sim \transition(s_{\indextransition},a_{\indextransition},s_{\indextransition+1}) \text{and } a_{\indextransition} \sim \policy(s_{\indextransition}).\nonumber
     \end{align}
 \end{definition}
@@ -142,8 +142,6 @@ If $\discountfactor < 1$, the operator $\bo^{*}$ is a contraction. Thanks to the
     \caption{Value-Iteration}
     \label{alg:value-iteration}
 \end{algorithm}
-
-
 
 Another approach is to evaluate the \idx{policy} with \Cref{eq:bellman-evalutation}, then improve it greedily over the current $Q$-function of the policy. The algorithm is called \gls{PI}~\parencite{howard60} and is described in \Cref{alg:policy-iteration}. \Cref{th:policy-improvment-theorem} ensures that the algorithm converges to the \idx{optimal} \idx{policy}. \gls{PI} and \gls{VI} are quite similar. One difference is that \gls{VI} does evaluation and policy improvement at the same time. The mattering difference is the stopping criterion: \gls{PI} stops once the \idx{policy} has converged which happens earlier than the convergence of the $\Q$-function in \gls{VI}.
 
@@ -235,18 +233,20 @@ We can extend \gls{PI} using the same idea applied to the \idx{Bellman Evaluatio
 \section{Online interactions with the user}
 
 Creating a fixed \idx{dialogue corpus} is a difficult task. 
-A dialog is by essence an interactive and evolving process, and the existing corpora may be too expensive or even not suited for the problem at hands.
-In consequence, in some situations, it may be of interest to simply learn, or adapt, on-the-fly the \gls{DM} strategy while it \idx{dialogue}s with an unknown \idx{user}/\idx{environment}. In this section, we present algorithms to do such interactions with the \idx{user}. Those methods belong to the class of \idx{Online} \gls{RL} algorithms.
+A dialogue is by essence an interactive and evolving process, and the existing corpora may be too expensive or even not suited for the problem at hands.
+In consequence, in some situations, it may be of interest to simply learn, or adapt, on-the-fly the \gls{DM} strategy while it \idx{dialogue}s with an unknown \idx{user}/\idx{environment}. In this section, we present algorithms to do such interactions with the \idx{user} ~\parencite{Ferreira2013}. Those methods belong to the class of \idx{Online} \gls{RL} algorithms.
 
 \paragraph{The Exploitation/Exploration dilemma}
 
-In order to gather the \idx{transition}s the algorithm will learn with, the \gls{DM} adopts decisions dictated by a \gls{DP} $\policy$ called the \idx{behavioural policy}. In order to learn the optimal \idx{policy} (target \idx{policy}), $\policy$ needs to gather all the \idx{transition}s that would potentially be covered by the optimal \idx{policy}. As we are actually building this \idx{policy}, it is not possible to know in advance the useful \idx{transition}s for learning. The basic idea to cover the state-action space as the optimal \idx{policy} would do it is to perform an \idx{Exploration/Exploitation} strategy. The exploration phase discovers new areas in the state-action space, while the exploitation phase directs the \idx{agent} to a more profitable state-action space. Several implementations of the \idx{Exploration/Exploitation} dilemma have been proposed, coming from the Bandit community most of the time. In this manuscript, we will use the notorious \idx{$\egreedy$-greedy} strategy which works as follows:
+For a new user, in order to gather the \idx{transition}s the algorithm will learn with, the \gls{DM} adopts decisions dictated by a \gls{DP} $\policy$ called the \idx{behavioural policy}. In order to learn the optimal \idx{policy} (target \idx{policy}), $\policy$ needs to gather all the \idx{transition}s that would potentially be covered by the optimal \idx{policy}. As we are actually building this \idx{policy}, it is not possible to know in advance the useful \idx{transition}s for learning. The basic idea to cover the state-action space as the optimal \idx{policy} would do it is to perform an \idx{Exploration/Exploitation} strategy. The exploration phase discovers new areas in the state-action space, while the exploitation phase directs the \idx{agent} to a more profitable state-action space. Several implementations of the \idx{Exploration/Exploitation} dilemma have been proposed, coming from the Bandit community most of the time. In this manuscript, we will use the notorious \idx{$\egreedy$-greedy} strategy which works as follows:
 when the \idx{agent} is in state $s$, it chooses a random \idx{exploration} action with probability $\egreedy$, and it chooses the \idx{greedy} action (the most profitable action according to some parameters, the $\Q$-function for example) otherwise.
 
 As long as $\policy$ gathers \idx{transition}s, the \idx{policy} in construction (which is not necessarily  $\policy$) tends to be a better approximation of the optimal \idx{policy}. The \idx{agent} must refine its knowledge around the profitable states and for that, the $\egreedy$ must decrease with respect to the number of \idx{transition}s gathered.
 Exponential decay is commonly used for such a decreasing processes.
 The number $\egreedy$ is then a variable of {${\indextransition}$}, the current number of \idx{transition}s\footnote{or trajectories\index{trajectory}, this does not matter.}: $\egreedy({{\indextransition}}) = \exp(-{\lambda} {{\indextransition}})$ with {$\lambda$} dictating the vanishing speed. But, as the exponential decay procedure does not ensure convergence, it is usually safer to use a linear decay~\parencite{auer2002finite}:
 $\egreedy({{\indextransition}}) = \min\{1,1/(\lambda\indextransition)\}$.
+
+Note that we can already see the limitations of this approach for new users; it is not profitable to act randomly with a human discovering a new dialogue system, the risk of abandon is too high. We will see later that we can handle this issue with \gls{TL}.
 
 
 \paragraph{On-policy versus Off-policy}
@@ -284,7 +284,7 @@ We update $\params$ such that we minimise the loss. The update rule recalled in 
 
 \paragraph{Learning from scratch}
 
-In dialogue system applications, it is not usually hard to learn a \gls{DP} from scratch using \idx{Online} \gls{RL} algorithms. Indeed, the first interactions with the user are crucials to build a bond between the service and the user; taking random actions, using $\egreedy$-greedy, to gather information about the environment (including the humain) may just end-up with user dropouts. To tackle this problem, it is possible to contraint the action-space to get the relevant actions for a given state~\parencite{singh2002,williams2008,laroche2009,laroche2010a}. As those solutions necessitate an expertise on \gls{RL}, new studies introduced techniques suited to an average developer; to name a few: \gls{RL} results monitoring~\parencite{laroche2010b}, convergence speed prediction~\parencite{elasri2013} or interaction quality prediction~\parencite{elasri2014}. In this thesis we tackle this problem using \acrfull{TL}, as we will see in the next chapter.
+In dialogue system applications, it is not usually easy to learn a \gls{DP} from scratch using \idx{Online} \gls{RL} algorithms. Indeed, the first interactions with the user are crucials to build a bond between the service and the user; taking random actions, using $\egreedy$-greedy, to gather information about the environment (including the humain) may just end-up with user dropouts. To tackle this problem, it is possible to contraint the action-space to get the relevant actions for a given state~\parencite{singh2002,williams2008,laroche2009,laroche2010a}. As those solutions necessitate an expertise on \gls{RL}, new studies introduced techniques suited to an average developer; to name a few: \gls{RL} results monitoring~\parencite{laroche2010b}, convergence speed prediction~\parencite{elasri2013} or interaction quality prediction~\parencite{elasri2014}. In this thesis we tackle this problem using \acrfull{TL}, as we will see in the next chapter.
 %=======
 %In dialogue system applications, it is not usually hard to learn a \gls{DP} from scratch using \idx{Online} \gls{RL} algorithms. Indeed, the first interactions with the user are crucial to build a bond between the service and the user; taking random actions, using $\egreedy$-greedy, to gather information about the environment (including the humain) may just end-up with user dropouts. To tackle such problem, it is possible to contraint the action-space to the relevant ones in a given state~\parencite{singh2002,williams2008,laroche2009,laroche2010a}. As those solutions necessitate an expertise on \gls{RL}, new studies introduced techniques suited to an average developer; to name a few: \gls{RL} results monitoring~\parencite{laroche2010b}, convergence speed prediction~\parencite{elasri2013} or interaction quality prediction~\parencite{elasri2014}. In this thesis we tackle this problem using $\gls{TL}$, as we will see in the next chapter.
 %>>>>>>> master

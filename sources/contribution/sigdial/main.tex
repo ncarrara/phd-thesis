@@ -47,7 +47,7 @@ Both rely on \textbf{\textsc{PD-Distance}}, a novel \idx{policy}-driven distance
 \begin{equation}
     d_{pd}\left(u,u'\right) = \sqrt{\sum_{s\in\Omega}1 - \mathds{1}\left(\policy_{u}(s),\policy_{u'}(s)\right)}
 \end{equation}
-where $u$ and $u'$ are source \idx{user}s and $\policy_{u}$ and $\policy_{u'}$ the deterministic policies trained with them. The state set $\Omega$ is obtained by sampling over the states contained in the dialogues database.
+where $u$ and $u'$ are source \idx{user}s and $\policy_{u}$ and $\policy_{u'}$ the deterministic policies trained with them. The state set $\Omega$ is obtained by sampling over the states contained in the dialogues database. The function $\mathds{1}$ is the Kronecker delta: $\mathds{1}(x,y) = \delta_{xy}$
 
 In the \textbf{\textsc{Kmedoids}} method, we propose to choose directly $k$ representatives into the systems database. The cost function optimised by the $k$-medoids algorithm, denoted as $J$ here, is used. Let $\mathscr{P}_k(\users)$ denote the ensemble of $k$ combinations of elements among $\users$, the set of all source \idx{user}s. If $U\in \mathscr{P}_k(\users)$, and $d$ is a distance, then the cost function is defined as:
 \begin{equation}
@@ -163,7 +163,7 @@ The number of slots available has been set to $N_{\timeslot}=4$ and all human \i
 
 Human-model users\index{human-model user} can do the following actions: \texttt{Accept}, \texttt{AskRepeat} and \texttt{EndDial}. They can also \texttt{RefProp}($\timeslot$) to refuse the other \idx{user} slot and propose their $\timeslot^\text{th}$ best slot. For instance, the action \texttt{RefProp}(0) then means that the \idx{human-model user} refuses and proposes its best slot. We find the corresponding \idx{human-model user}s actions with the humans actions. \Cref{actionsdistrib} shows the empirical distribution on the \idx{human-model user}s actions space for each (real) human. Although humans were neither playing against the same players, nor starting from the same initial states of the game, some behavioural differences clearly appear. \textit{Merwan} tends to insist on his best slot while \textit{Nico} seems more compliant. \textit{Alex} is more versatile in the actions chosen.
 
-Human-model users\index{human-model user}  require an approximate representation, or projection, of the human state. The \idx{dialogue} state representation is defined as a vector of the $2 + 3 \cdot N_{\timeslot}$  following attributes: the \gls{SRS} $\srs$ of the last received utterance, the costs of all slots sorted, the frequencies of all \texttt{RefProp}(i) actions done by this \idx{user} during the \idx{dialogue}, the frequencies of all slot propositions done by the other \idx{user} (ordered by cost for this \idx{user}) during the \idx{dialogue} and finally the cost of the last slot proposed by the other \idx{user}.
+Human-model users\index{human-model user}  require an approximate representation, or projection, of the human state. The \idx{dialogue} state representation is defined as a vector of the $2 + 3 N_{\timeslot}$  following attributes: the \gls{SRS} $\srs$ of the last received utterance, the costs of all slots sorted, the frequencies of all \texttt{RefProp}(i) actions done by this \idx{user} during the \idx{dialogue}, the frequencies of all slot propositions done by the other \idx{user} (ordered by cost for this \idx{user}) during the \idx{dialogue} and finally the cost of the last slot proposed by the other \idx{user}.
 
 Each human is \idx{model}led with a \gls{kNN}, with $k=5$, fed with their corresponding data couples state/action. \Cref{actionsdistrib} also shows the training errors.
 
@@ -308,4 +308,6 @@ In this chapter, \idx{user adaptation} has been proved to improve \glspl{DS} per
 
 User adaptation\index{user adaptation} requires selecting source systems to \idx{transfer} knowledge. This chapter proposed 2 methods: \textsc{Kmeans} and \textsc{Kmedoids} combined to a novel distance \textsc{PD-Distance} to select representative source systems, from a large database, which are used for \idx{transfer}ring \idx{dialogue} \idx{transition}s. These methods outperform generic policies in the \idx{handcrafted} setup and improve \idx{dialogue} quality when facing \idx{model}s learnt on human-human data.
 
-In the next chapter, we will propose solutions to condense the whole pipeline into a single procedure, by extending the famous \gls{DQN} algorithm.
+\section{Discussion}
+
+The framework is working but is heavily engineered. Each composant can be tested and validated which is a good thing. However, each of those composant can generate errors and approximations. Also the number of meta-parameters make it hard to optimise from a human perspective. Finally, the effort of implementation is cumbersome. As a consequence, we will propose solutions to condense the whole pipeline into a single procedure, by extending the famous \gls{DQN} algorithm. As it is an early work in progress, we will see those propositions in an extra chapter: \Cref{sec:continuous}.
