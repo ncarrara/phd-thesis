@@ -308,4 +308,6 @@ In this chapter, \idx{user adaptation} has been proved to improve \glspl{DS} per
 
 User adaptation\index{user adaptation} requires selecting source systems to \idx{transfer} knowledge. This chapter proposed 2 methods: \textsc{Kmeans} and \textsc{Kmedoids} combined to a novel distance \textsc{PD-Distance} to select representative source systems, from a large database, which are used for \idx{transfer}ring \idx{dialogue} \idx{transition}s. These methods outperform generic policies in the \idx{handcrafted} setup and improve \idx{dialogue} quality when facing \idx{model}s learnt on human-human data.
 
-In the next chapter, we will propose solutions to condense the whole pipeline into a single procedure, by extending the famous \gls{DQN} algorithm.
+\section{Discussion}
+
+The framework is working but is heavily engineered. Each composant can be tested and validated which is a good thing. However, each of those composant can generate errors and approximations. Also the number of meta-parameters make is hard to optimise from a human perspective. Finally, the effort of implementation is cumbersome. As a consequence, we will propose solutions to condense the whole pipeline into a single procedure, by extending the famous \gls{DQN} algorithm. As it is a early work in progress, we will see those propositions in an extra chapter, ~\cref{sec:continuous}.
